@@ -18,6 +18,8 @@ CUE_GOLGRA_AS_EXPECTED = os.path.join(
 )
 CUE_WHERE_IS_ESQUIE = os.path.join(os.path.dirname(__file__), "where-is-esquie.png")
 CUE_WELL_WELL = os.path.join(os.path.dirname(__file__), "golgra-well-well.png")
+CUE_E_AFTER_FAIL = os.path.join(os.path.dirname(__file__), "golgra-E-after-fail.png")
+
 
 
 def ydotool(*args):
@@ -172,73 +174,94 @@ def on_golgra_as_expected() -> None:
     ydotool("key", "33:1")
     ydotool("key", "33:0")
 
-    # time.sleep(2.0)
+    time.sleep(1.0)
 
     # It seems intermittent how long it takes until we can move in dialog?
     # It's also intermittent what two two S presses are going to do??
-    if not wait_for_visual_cue(CUE_WELL_WELL, lambda: (), timeout=5.0):
-        print("BOOO")
-        return
+    # if not wait_for_visual_cue(CUE_WELL_WELL, lambda: (), timeout=5.0):
+    #     print("BOOO")
+    #     return
 
     beep()
-
-    # time.sleep(1.5)
 
     # Choose final dialog option
 
-    # # W Key
-    # ydotool("key", "17:1")
-    # time.sleep(0.3)
-    # ydotool("key", "17:0")
-    # time.sleep(1.0)
+    time.sleep(3.0)
 
-    # S Key
-    ydotool("key", "31:1")
-    time.sleep(0.1)
-    ydotool("key", "31:0")
-    time.sleep(0.5)
+    def select_option_and_fighter():
+        # W Key
+        # ydotool("key", "17:1")
+        # ydotool("key", "17:0")
+        # time.sleep(1.0)
 
-    # S Key
-    ydotool("key", "31:1")
-    ydotool("key", "31:0")
-    time.sleep(0.5)
+        # S Key
+        ydotool("key", "31:1")
+        time.sleep(0.1)
+        ydotool("key", "31:0")
+        time.sleep(0.5)
 
-    # F Key
-    ydotool("key", "33:1")
-    ydotool("key", "33:0")
-    time.sleep(1.0)
+        # S Key
+        ydotool("key", "31:1")
+        ydotool("key", "31:0")
+        time.sleep(0.5)
 
-    # # Golgra: Really? A Duel?
+        # F Key
+        ydotool("key", "33:1")
+        ydotool("key", "33:0")
+        time.sleep(1.0)
 
-    time.sleep(1.0)
+        # # Golgra: Really? A Duel?
 
-    # F Key
-    ydotool("key", "33:1")
-    ydotool("key", "33:0")
-    time.sleep(0.5)
+        time.sleep(1.0)
 
-    # # Select Fighter
+        # F Key
+        ydotool("key", "33:1")
+        ydotool("key", "33:0")
+        time.sleep(0.5)
 
-    # A Key
-    ydotool("key", "30:1")
-    ydotool("key", "30:0")
-    time.sleep(0.5)
+        # # Select Fighter
 
-    # Hold ENTER Key
-    ydotool("key", "28:1")
-    time.sleep(1.5)
-    ydotool("key", "28:0")
-    time.sleep(1.0)
+        # A Key
+        ydotool("key", "30:1")
+        ydotool("key", "30:0")
+        time.sleep(0.5)
 
-    # F Key
-    ydotool("key", "33:1")
-    ydotool("key", "33:0")
-    time.sleep(0.5)
+        # Hold ENTER Key
+        ydotool("key", "28:1")
+        time.sleep(1.5)
+        ydotool("key", "28:0")
+        time.sleep(1.0)
 
-    time.sleep(1.5)
+        # F Key
+        ydotool("key", "33:1")
+        ydotool("key", "33:0")
+        time.sleep(0.5)
 
-    # Final beep, back to combat!
-    beep()
+        time.sleep(1.5)
+
+        # Final beep, back to combat!
+        beep()
+
+    select_option_and_fighter()
+
+    # Check if we failed
+    while wait_for_visual_cue(CUE_E_AFTER_FAIL, lambda: (), timeout=5.0):
+        print("Try again")
+
+        # E Key
+        ydotool("key", "18:1")
+        ydotool("key", "18:0")
+        time.sleep(1.0)
+
+        # F Key
+        ydotool("key", "33:1")
+        ydotool("key", "33:0")
+        time.sleep(1.0)
+
+        time.sleep(2.0)
+
+        select_option_and_fighter()
+
 
 
 def wait_for_visual_cue(
