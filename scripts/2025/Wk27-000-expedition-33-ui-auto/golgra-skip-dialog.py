@@ -38,18 +38,14 @@ def take_screenshot():
     Take a portal screenshot with animations temporarily disabled so the
     white flash never appears.  The original setting is restored afterward.
     """
-    import subprocess, time, os
-    from pathlib import Path
-
-    shots_dir = Path.home() / "Pictures"
+    screenshots_dir = Path.home() / "Pictures"
 
     try:
         orig_anim = subprocess.check_output(
             ["gsettings", "get", "org.gnome.desktop.interface", "enable-animations"],
             text=True,
-        ).strip()  # returns 'true' or 'false'
+        ).strip()
     except Exception as e:
-        # orig_anim = None  # gsettings not available, continue silently
         raise Exception(f"Setting Gsettings failed: {e}")
 
     restore_needed = orig_anim == "true"
@@ -66,7 +62,8 @@ def take_screenshot():
         )
 
     try:
-        before = {f.name for f in shots_dir.glob("Screenshot*.png")}
+        before = {f.name for f in screenshots_dir.glob("Screenshot*.png")}
+
         subprocess.run(
             [
                 "gdbus",
@@ -86,13 +83,14 @@ def take_screenshot():
         )
 
         path = None
+
         for _ in range(20):
             time.sleep(0.1)
 
-            new = {f.name for f in shots_dir.glob("Screenshot*.png")} - before
+            new = {f.name for f in screenshots_dir.glob("Screenshot*.png")} - before
 
             if new:
-                path = shots_dir / max(new)
+                path = screenshots_dir / max(new)
                 for _ in range(10):
                     s1 = path.stat().st_size
                     time.sleep(0.05)
@@ -166,15 +164,13 @@ def on_golgra_as_expected() -> None:
     # E Key
     ydotool("key", "18:1")
     ydotool("key", "18:0")
-    time.sleep(1.0)
+    time.sleep(0.5)
 
     # Skip Hi
 
     # F Key
     ydotool("key", "33:1")
     ydotool("key", "33:0")
-
-    time.sleep(1.0)
 
     # It seems intermittent how long it takes until we can move in dialog?
     # It's also intermittent what two two S presses are going to do??
@@ -185,9 +181,6 @@ def on_golgra_as_expected() -> None:
     beep()
 
     # Choose final dialog option
-
-    time.sleep(3.0)
-
     def select_option_and_fighter():
         # W Key
         # ydotool("key", "17:1")
@@ -196,17 +189,19 @@ def on_golgra_as_expected() -> None:
 
         # S Key
         ydotool("key", "31:1")
-        time.sleep(0.1)
+        time.sleep(0.3)
         ydotool("key", "31:0")
         time.sleep(0.5)
 
         # S Key
         ydotool("key", "31:1")
+        time.sleep(0.3)
         ydotool("key", "31:0")
         time.sleep(0.5)
 
         # F Key
         ydotool("key", "33:1")
+        time.sleep(0.3)
         ydotool("key", "33:0")
         time.sleep(1.0)
 
@@ -241,6 +236,9 @@ def on_golgra_as_expected() -> None:
 
         # Final beep, back to combat!
         beep()
+
+
+    time.sleep(3.0)
 
     select_option_and_fighter()
 
