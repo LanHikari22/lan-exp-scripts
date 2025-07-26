@@ -2,6 +2,32 @@
 
 Those are scripts I wrote in 2024 that allows use of `yt-dlp` to get comments for a youtube video and then search them.
 
+# To quickly start the application shell with docker
+
+```sh
+git clone https://github.com/LanHikari22/lan-exp-scripts.git && \
+cd lan-exp-scripts/scripts/2025/weekly/Wk29-000-yt-comment-search/old-2024/ && \
+./docker_start_bash.sh
+```
+
+# Usage
+
+```sh
+# to show all comments:
+./grep_comments_yt.sh {youtube_url}
+
+# to grep for specific comments:
+./grep_comments_yt.sh {youtube_url} "specific"
+```
+
+This opens the results to be viewed in visidata.
+
+## On Visidata,
+
+You can word wrap using `v`. If the comment is still too large, do z + Enter and then v in side the new sheet.
+
+
+
 # Installation
 
 Reference base Ubuntu 25.04 image:
@@ -29,22 +55,6 @@ For `grep_comments_yt.sh`:
 apt install csvkit 
 ~/.venv/bin/pip3 install visidata
 ```
-
-# Usage
-
-```sh
-# to show all comments:
-./grep_comments_yt.sh {youtube_url}
-
-# to grep for specific comments:
-./grep_comments_yt.sh {youtube_url} "specific"
-```
-
-This opens the results to be viewed in visidata.
-
-## On Visidata,
-
-You can word wrap using `v`. If the comment is still too large, do z + Enter and then v in side the new sheet.
 
 # Dependencies
 
