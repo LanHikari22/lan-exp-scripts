@@ -26,7 +26,11 @@ This opens the results to be viewed in visidata.
 
 You can word wrap using `v`. If the comment is still too large, do z + Enter and then v in side the new sheet.
 
+To track some thread, you can do `z|` and then `"{id}" in id or "{id}" in parent` and then do `"` and you will find aall the comments with `{id}`.
 
+You can also filter the text itself with `z|`, and then `{text} in text` and then `"`. 
+
+You can do frequency analysis, for example on the Authors column with `F`. and then press `Enter` on the one with most comments to view them.
 
 # Installation
 
