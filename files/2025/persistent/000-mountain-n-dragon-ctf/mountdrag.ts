@@ -3,10 +3,10 @@
 //ported to javascript by 2Tie for OLJ '19
 //Deluxe edition by 2Tie for REJ '24
 
-var g_unk_data = [
-  0, 0, 0, 2, 175, 51, 2, 179, 51, 2, 180, 51, 2, 182, 51, 8, 1, 0, 2, 183, 51,
-  0, 140, 12, 46, 0, 34, 13, 46, 30, 176, 11, 12, 0, 0, 26, 138, 3, 12, 2, 0,
-  26, 89, 0, 12, 1, 0, 26, 106, 4, 12, 3, 0, 26, 106, 1, 12, 5, 0, 26, 68, 0,
+import * as webio from "./webio.ts";
+
+export var g_tape_remaining = [
+  12, 3, 0, 26, 106, 1, 12, 5, 0, 26, 68, 0,
   30, 197, 10, 24, 29, 0, 34, 1, 179, 51, 12, 6, 0, 36, 26, 82, 0, 24, 62, 0, 0,
   17, 14, 46, 24, 29, 0, 0, 83, 14, 46, 30, 176, 11, 12, 0, 0, 26, 25, 0, 12, 2,
   0, 26, 208, 0, 12, 3, 0, 26, 21, 2, 12, 4, 0, 26, 132, 0, 12, 5, 0, 26, 148,
@@ -615,74 +615,192 @@ var g_unk_data = [
   19, 0, 19, 3, 15, 18, 16, 9, 15, 14, 255, 7, 13, 15, 7, 8, 14, 9, 255,
 ];
 
-var g_unk_fns = [
+function cmd00_write_param_to_reg(param16: number): number[] {
+  return [0, param16 & 0xFF, (param16 & 0xFF00) >> 8];
+}
+
+function cmd01_store_reg_to_tape_addr(tape_addr16: number): number[] {
+  return [2, tape_addr16 & 0xFF, (tape_addr16 & 0xFF00) >> 8];
+}
+
+function cmd04_sum_reg_param_to_reg(param16: number): number[] {
+  return [8, param16 & 0xFF, (param16 & 0xFF00) >> 8];
+}
+
+function cmd06_check_reg16_is_param16(param16: number): number[] {
+  return [12, param16 & 0xFF, (param16 & 0xFF00) >> 8];
+}
+
+function cmd13_beq(tape_addr16: number): number[] {
+  return [26, tape_addr16 & 0xFF, (tape_addr16 & 0xFF00) >> 8];
+}
+
+function cmd15_stack_preserve_call(tape_addr16: number): number[] {
+  return [30, tape_addr16 & 0xFF, (tape_addr16 & 0xFF00) >> 8];
+}
+
+function cmd23_noop(): number[] {
+  return [46];
+}
+
+function reconstruct_tape(): number[] {
+  var tape: number[] = []; 
+
+  tape.push(...cmd00_write_param_to_reg(/*param16*/ 0x0000));
+  tape.push(...cmd01_store_reg_to_tape_addr(/*tape_addr16*/ 0x33af));
+  tape.push(...cmd01_store_reg_to_tape_addr(/*tape_addr16*/ 0x33b3));
+  tape.push(...cmd01_store_reg_to_tape_addr(/*tape_addr16*/ 0x33b4));
+  tape.push(...cmd01_store_reg_to_tape_addr(/*tape_addr16*/ 0x33b6));
+  tape.push(...cmd04_sum_reg_param_to_reg(/*param16*/ 0x0001));
+  tape.push(...cmd01_store_reg_to_tape_addr(/*tape_addr16*/ 0x33b7));
+  tape.push(...cmd00_write_param_to_reg(/*param16*/ 0x0c8c));
+  tape.push(...cmd23_noop());
+  tape.push(...cmd00_write_param_to_reg(/*param16*/ 0x0d22));
+  tape.push(...cmd23_noop());
+  tape.push(...cmd15_stack_preserve_call(/*tape_addr16*/ 0x0bb0));
+  tape.push(...cmd06_check_reg16_is_param16(/*param16*/ 0x0000));
+  tape.push(...cmd13_beq(/*tape_addr16*/ 0x038a));
+  tape.push(...cmd06_check_reg16_is_param16(/*param16*/ 0x0002));
+  tape.push(...cmd13_beq(/*tape_addr16*/ 0x0059));
+  tape.push(...cmd06_check_reg16_is_param16(/*param16*/ 0x0001));
+  tape.push(...cmd13_beq(/*tape_addr16*/ 0x046a));
+  tape.push(...g_tape_remaining);
+
+  return tape;
+}
+
+export var g_tape = reconstruct_tape();
+
+function verify_tape_integrity() {
+  const expected_simple_checksum = 287251;
+  const expected_num_elements = 13229;
+
+  if (g_tape.length != expected_num_elements) {
+    throw new Error(`Expected tape length ${expected_num_elements} but got ${g_tape.length}`);
+  }
+
+  var sum = 0;
+  
+  for (var i=0; i<g_tape.length; i++) {
+    sum += g_tape[i];
+  }
+
+  if (sum != expected_simple_checksum) {
+    throw new Error(`Expected tape sum ${expected_simple_checksum} but got ${sum}`);
+  }
+
+  console.log("tape OK");
+}
+
+export var g_cmds = [
+  // 0
   function () {
-    a = n();
+    g_reg16 = get_and_adv_tape_u16_and_load_on_odd_caller();
   },
+
+  // 1
   function () {
-    g_unk_data[h()] = a;
+    // Write register data to the next u16 inst
+    g_tape[get_and_adv_tape_u16()] = g_reg16;
   },
+
+  // 2
   function () {
-    g_unk_data[h()] = g_unk_data[a];
+    g_tape[get_and_adv_tape_u16()] = g_tape[g_reg16];
   },
+
+  // 3
   function () {
-    g_unk_data[a] = n();
+    g_tape[g_reg16] = get_and_adv_tape_u16_and_load_on_odd_caller();
   },
+
+  // 4
   function () {
-    a += n();
+    g_reg16 += get_and_adv_tape_u16_and_load_on_odd_caller();
   },
+
+  // 5
   function () {
-    a -= n();
+    g_reg16 -= get_and_adv_tape_u16_and_load_on_odd_caller();
   },
+
+  // 6
   function () {
-    g_b = a == n();
+    g_cond_reg = g_reg16 == get_and_adv_tape_u16_and_load_on_odd_caller();
   },
+
+  // 7
   function () {
-    g_b = a < n();
+    g_cond_reg = g_reg16 < get_and_adv_tape_u16_and_load_on_odd_caller();
   },
+  // 8
   function () {
-    g_b = 0 != (a & n());
+    g_cond_reg = 0 != (g_reg16 & get_and_adv_tape_u16_and_load_on_odd_caller());
   },
+
+  // 9
   function () {
-    a = a & n();
+    g_reg16 = g_reg16 & get_and_adv_tape_u16_and_load_on_odd_caller();
   },
+
+  // 10
   function () {
-    a = a | n();
+    g_reg16 = g_reg16 | get_and_adv_tape_u16_and_load_on_odd_caller();
   },
+
+  // 11
   function () {
-    a = a ^ n();
+    g_reg16 = g_reg16 ^ get_and_adv_tape_u16_and_load_on_odd_caller();
   },
+
+  // 12
   function () {
-    g_p = n();
+    g_pc16 = get_and_adv_tape_u16_and_load_on_odd_caller();
   },
+
+  // 13
   function () {
-    var v = n();
-    g_p = g_b ? v : g_p;
+    var v = get_and_adv_tape_u16_and_load_on_odd_caller();
+    g_pc16 = g_cond_reg ? v : g_pc16;
   },
+
+  // 14
   function () {
-    var v = n();
-    g_p = g_b ? g_p : v;
+    var v = get_and_adv_tape_u16_and_load_on_odd_caller();
+    g_pc16 = g_cond_reg ? g_pc16 : v;
   },
+
+  // 15
   function () {
-    g_s -= 1;
-    g_unk_data[g_s] = g_p + 2;
-    g_p = n();
+    g_sp16 -= 1;
+    g_tape[g_sp16] = g_pc16 + 2;
+    g_pc16 = get_and_adv_tape_u16_and_load_on_odd_caller();
   },
+
+  // 16
   function () {
-    g_p = g_unk_data[g_s];
-    g_s += 1;
+    g_pc16 = g_tape[g_sp16];
+    g_sp16 += 1;
   },
+
+  // 17
   function () {
-    g_s -= 1;
-    g_unk_data[g_s] = a;
+    g_sp16 -= 1;
+    g_tape[g_sp16] = g_reg16;
   },
+
+  // 18
   function () {
-    a = g_unk_data[g_s];
-    g_s += 1;
+    g_reg16 = g_tape[g_sp16];
+    g_sp16 += 1;
   },
+
+  // 19
   function () {
-    g_e = 1;
+    g_exit_code = 1;
   },
+
+  // 20
   function () {
     g_inp = 0;
     g_inp +=
@@ -692,45 +810,62 @@ var g_unk_fns = [
       (g_joyp[40] << 3) +
       (g_joyp[90] << 4) +
       (g_joyp[88] << 5);
-    a = g_inp;
+    g_reg16 = g_inp;
   },
+
+  // 21
   function () {
-    Function`$${"\x61 \x3D\x20\x6E\x65\x77 \x44\x61\x74\x65\x28\x29\x5B\x27\x67\x65\x74\x53\x65\x63\x6F\x6E\x64\x73\x27\x5D\x28\x29 "}$`();
+    // Function`$${"\x61 \x3D\x20\x6E\x65\x77 \x44\x61\x74\x65\x28\x29\x5B\x27\x67\x65\x74\x53\x65\x63\x6F\x6E\x64\x73\x27\x5D\x28\x29 "}$`();
+    // Hex for:
+    // a = new Date()['getSeconds']()
+
+    g_reg16 = new Date()['getSeconds']()
   },
+
+  // 22
   function () {
-    this.document.location.href = "" + l(a) + ".html";
+    this.document.location.href = "" + l(g_reg16) + ".html";
   },
 ];
 
-function g() {
-  var v = g_unk_data[g_p];
-  g_p += 1;
+function get_and_adv_tape() {
+  var v = g_tape[g_pc16];
+  g_pc16 += 1;
   return v;
 }
-function h() {
-  var v = g();
-  return v + (g() << 8);
+
+function get_and_adv_tape_u16() {
+  var v = get_and_adv_tape();
+  return v + (get_and_adv_tape() << 8);
 }
-function n() {
-  var v = h();
-  if (g_q % 2 > 0) v = g_unk_data[v] || 0;
-  return v;
+
+function get_and_adv_tape_u16_and_load_on_odd_caller() {
+  var inst16 = get_and_adv_tape_u16();
+  if (g_inst8 % 2 > 0) inst16 = g_tape[inst16] || 0;
+  return inst16;
 }
+
 function l(v) {
   function y(v) {
     return "wnesai0123456789X".substring(v, v + 1);
   }
+
   var y1 = "";
-  while (g_unk_data[v] != 255) {
-    y1 = y1 + y(g_unk_data[v]);
+
+  while (g_tape[v] != 255) {
+    y1 = y1 + y(g_tape[v]);
     v += 1;
   }
+
   v += 1;
+
   var y2 = "";
-  while (g_unk_data[v] != 255) {
-    y2 = y2 + y(g_unk_data[v]);
+
+  while (g_tape[v] != 255) {
+    y2 = y2 + y(g_tape[v]);
     v += 1;
   }
+
   return y1 + y2;
 }
 
@@ -741,37 +876,67 @@ g_joyp[39] = 0;
 g_joyp[40] = 0;
 g_joyp[88] = 0;
 g_joyp[90] = 0;
-window.onkeyup = function (e) {
+
+window.onkeyup = function (e: KeyboardEvent) {
   g_joyp[e.keyCode] = 0;
 };
-window.onkeydown = function (e) {
+
+window.onkeydown = function (e: KeyboardEvent) {
   g_joyp[e.keyCode] = 1;
 };
 
 var g_inp = 0;
 var g_mq = document.getElementById("marquee");
 
-var a = 0,
-  g_b = 0,
-  g_p = 0,
-  g_s = 0,
-  g_q = 0,
-  g_e = 0;
-function mainloop() {
-  g_e = 0;
+var g_cond_reg = false;
+
+var g_reg16 = 0,
+  g_pc16 = 0,
+  g_sp16 = 0,
+  g_inst8 = 0,
+  g_exit_code = 0;
+
+// var g_socket = webio.connect("localhost", 3003, (event) => {
+//   console.log(`Server: ${event.data}`)
+// })
+
+verify_tape_integrity()
+
+// Starts out onload in html
+export function mainloop() {
+  g_exit_code = 0;
   g_inp = 0;
-  while (g_e == 0) {
-    g_q = g();
-    var f = g_unk_fns[Math.floor(g_q / 2)];
-    if (f) f();
+
+  var i = 0;
+
+  while (g_exit_code == 0) {
+    g_inst8 = get_and_adv_tape();
+
+    var cmd_idx = Math.floor(g_inst8 / 2);
+
+    // if (webio.m_connected) {
+    //   g_socket.send(`${i++},${cmd_idx},${g_data_cur},${g_inst8}`)
+    // }
+
+    var fn = g_cmds[cmd_idx];
+    if (fn) {
+      fn();
+    } 
   }
+
+  if (!g_mq) {
+    throw new TypeError('Error message');
+  }
+
+  // update black box with the input currently selected if any
   g_mq.innerHTML = " ";
-  g_mq.innerHTML += (g_inp >> 0) & (1 == 1) ? "L" : " ";
-  g_mq.innerHTML += (g_inp >> 1) & (1 == 1) ? "R" : " ";
-  g_mq.innerHTML += (g_inp >> 2) & (1 == 1) ? "F" : " ";
-  g_mq.innerHTML += (g_inp >> 3) & (1 == 1) ? "B" : " ";
-  g_mq.innerHTML += (g_inp >> 4) & (1 == 1) ? "I" : " ";
-  g_mq.innerHTML += (g_inp >> 5) & (1 == 1) ? "U" : " ";
+  g_mq.innerHTML += ((g_inp >> 0) & 1) != 0 ? "L" : " ";
+  g_mq.innerHTML += ((g_inp >> 1) & 1) != 0 ? "R" : " ";
+  g_mq.innerHTML += ((g_inp >> 2) & 1) != 0 ? "F" : " ";
+  g_mq.innerHTML += ((g_inp >> 3) & 1) != 0 ? "B" : " ";
+  g_mq.innerHTML += ((g_inp >> 4) & 1) != 0 ? "I" : " ";
+  g_mq.innerHTML += ((g_inp >> 5) & 1) != 0 ? "U" : " ";
   g_mq.innerHTML += " ";
+
   requestAnimationFrame(mainloop);
 }
