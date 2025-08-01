@@ -38,20 +38,67 @@ class CommandData:
 
 
 commands = [
-    CommandData("cmd00", 0, "cmd00_write_param_to_reg(/*param16*/ {PARAM0})", [16]),
+    CommandData("cmd00", 0, "cmd00_write_param16_to_reg16(/*param16*/ {PARAM0})", [16]),
     CommandData(
-        "cmd01", 2, "cmd01_store_reg_to_tape_addr(/*tape_addr16*/ {PARAM0})", [16]
+        "cmd00", 1, "cmd00_write_loaded_param16_to_reg16(/*param16*/ {PARAM0})", [16]
     ),
-    CommandData("cmd04", 8, "cmd04_sum_reg_param_to_reg(/*param16*/ {PARAM0})", [16]),
+    CommandData(
+        "cmd01", 2, "cmd01_store_reg16_to_tape_addr(/*addr16*/ {PARAM0})", [16]
+    ),
+    CommandData(
+        "cmd02", 4, "cmd02_store_loaded_reg16_to_loaded_param16(/*addr16*/ {PARAM0})", [16]
+    ),
+    CommandData(
+        "cmd03", 6, "cmd03_set_loaded_reg16_to_param16(/*param16*/ {PARAM0})", [16]
+    ),
+    CommandData(
+        "cmd03", 7, "cmd03_set_loaded_reg16_to_loaded_param16(/*addr16*/ {PARAM0})", [16]
+    ),
+    CommandData(
+        "cmd04", 8, "cmd04_sum_reg16_param16_to_reg16(/*param16*/ {PARAM0})", [16]
+    ),
+    CommandData(
+        "cmd04", 9, "cmd04_sum_reg16_loaded_param16_to_reg16(/*param16*/ {PARAM0})", [16]
+    ),
+    CommandData(
+        "cmd05", 10, "cmd05_sub_param16_from_reg16(/*param16*/ {PARAM0})", [16]
+    ),
     CommandData(
         "cmd06", 12, "cmd06_check_reg16_is_param16(/*param16*/ {PARAM0})", [16]
     ),
-    CommandData("cmd13", 26, "cmd13_beq(/*tape_addr16*/ {PARAM0})", [16]),
     CommandData(
-        "cmd15", 30, "cmd15_stack_preserve_call(/*tape_addr16*/ {PARAM0})", [16]
+        "cmd06", 13, "cmd06_check_reg16_is_loaded_param16(/*param16*/ {PARAM0})", [16]
     ),
+    CommandData(
+        "cmd07", 14, "cmd07_check_reg16_lt_param16(/*param16*/ {PARAM0})", [16]
+    ),
+    CommandData(
+        "cmd07", 15, "cmd07_check_reg16_lt_loaded_param16(/*addr16*/ {PARAM0})", [16]
+    ),
+    CommandData(
+        "cmd09", 18, "cmd09_check_reg16_and_param16(/*param16*/ {PARAM0})", [16]
+    ),
+    CommandData("cmd12", 24, "cmd12_goto(/*addr16*/ {PARAM0})", [16]),
+    CommandData("cmd13", 26, "cmd13_beq(/*addr16*/ {PARAM0})", [16]),
+    CommandData("cmd14", 28, "cmd14_bne(/*addr16*/ {PARAM0})", [16]),
+    CommandData(
+        "cmd15", 30, "cmd15_stack_preserve_call(/*addr16*/ {PARAM0})", [16]
+    ),
+    CommandData(
+        "cmd16", 32, "cmd16_return()", []
+    ),
+    CommandData("cmd17", 34, "cmd17_push_reg16_to_stack()", []),
+    CommandData("cmd18", 36, "cmd18_pop_stack_to_reg16()", []),
+    CommandData("cmd19", 38, "cmd19_issue_new_frame()", []),
+    CommandData("cmd20", 40, "cmd20_read_joypad_input_and_set_to_reg16()", []),
+    CommandData("cmd21", 42, "cmd21_set_reg16_to_cur_seconds()", []),
+    CommandData("cmd22", 44, "cmd22_set_dom_href_to_reg16()", []),
     CommandData("cmd23", 46, "cmd23_noop()", []),
 ]
+
+
+def compute_num_command_bytes(command: CommandData):
+    return sum(command.param_widths) | pipe.Of[int].map(lambda sum: sum // 8)
 
 
 def scan_next_command(
@@ -102,9 +149,7 @@ def scan_next_command(
         | pipe.OfIter[int].to_list()
     )
 
-    indices_to_skip = sum(command.param_widths) | pipe.Of[int].map(lambda sum: sum // 8)
-
-    return ((command, values_read), tape[1 + indices_to_skip :])
+    return ((command, values_read), tape[1 + compute_num_command_bytes(command) :])
 
 
 def format_command_params(command: CommandData, params: List[int]) -> List[str]:
@@ -151,8 +196,20 @@ def create_remaining_tape_ts(remaining_tape: List[int]):
 
     with open(f"{script_path}/../autogen/remaining_tape.ts", "w") as f:
         f.write(content)
-    
-    print('Created autogen/remaining_tape.ts')
+
+    print("Created autogen/remaining_tape.ts")
+
+
+def compute_program_counter(commands: List[CommandData], i: int) -> int:
+    mut_result = 0
+
+    for j, command in enumerate(commands):
+        if j == i:
+            break
+
+        mut_result += 1 + compute_num_command_bytes(command)
+
+    return mut_result
 
 
 def app_reconstruct_tape():
@@ -170,14 +227,23 @@ def app_reconstruct_tape():
     while True:
         command_tup, mut_remaining_tape = scan_next_command(mut_remaining_tape)
         if command_tup is None:
-          break
+            break
 
         mut_commands.append(command_tup)
 
-    for command, params in mut_commands:
-      command_s = format_command(command, params)
+    raw_commands = (
+        mut_commands
+        | pipe.OfIter[Tuple[CommandData, List[int]]].map(
+            pipe.tup2_unpack(lambda command, _: command)
+        )
+        | pipe.OfIter[CommandData].to_list()
+    )
 
-      content += f'  tape.push(...c.{command_s});\n'
+    for i, (command, params) in enumerate(mut_commands):
+        command_s = format_command(command, params)
+        pc = compute_program_counter(raw_commands, i)
+
+        content += f"  /*0x{pc:04x}*/ tape.push(...c.{command_s});\n"
 
     content += "  tape.push(...remaining_tape.data);\n\n"
     content += "  return tape;\n"
@@ -187,9 +253,8 @@ def app_reconstruct_tape():
 
     with open(f"{script_path}/../autogen/reconstructed_tape.ts", "w") as f:
         f.write(content)
-    
-    print('Created autogen/reconstructed_tape.ts')
 
+    print("Created autogen/reconstructed_tape.ts")
 
 
 def main(args: argparse.Namespace):

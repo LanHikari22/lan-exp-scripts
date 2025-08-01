@@ -135,7 +135,7 @@ export var g_cmds = [
 
   // 19
   function () {
-    g_exit_code = 1;
+    g_new_frame = 1;
   },
 
   // 20
@@ -232,7 +232,7 @@ var g_reg16 = 0,
   g_pc16 = 0,
   g_sp16 = 0,
   g_inst8 = 0,
-  g_exit_code = 0;
+  g_new_frame = 0;
 
 // var g_socket = webio.connect("localhost", 3003, (event) => {
 //   console.log(`Server: ${event.data}`)
@@ -242,12 +242,12 @@ verify_tape_integrity()
 
 // Starts out onload in html
 export function mainloop() {
-  g_exit_code = 0;
+  g_new_frame = 0;
   g_inp = 0;
 
   var i = 0;
 
-  while (g_exit_code == 0) {
+  while (g_new_frame == 0) {
     g_inst8 = get_and_adv_tape();
 
     var cmd_idx = Math.floor(g_inst8 / 2);
