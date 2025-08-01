@@ -1,29 +1,28 @@
-  // mountdrag.ts
-  var g_tape_remaining = [
-    26,
-    89,
-    0,
-    12,
-    1,
-    0,
-    26,
-    106,
-    4,
-    12,
-    3,
-    0,
-    26,
-    106,
-    1,
-    12,
-    5,
-    0,
-    26,
-    68,
-    0,
-    30,
-    197,
-    10,
+  // reconstructed_commands.ts
+  function cmd00_write_param_to_reg(param16) {
+    return [0, param16 & 255, (param16 & 65280) >> 8];
+  }
+  function cmd01_store_reg_to_tape_addr(tape_addr16) {
+    return [2, tape_addr16 & 255, (tape_addr16 & 65280) >> 8];
+  }
+  function cmd04_sum_reg_param_to_reg(param16) {
+    return [8, param16 & 255, (param16 & 65280) >> 8];
+  }
+  function cmd06_check_reg16_is_param16(param16) {
+    return [12, param16 & 255, (param16 & 65280) >> 8];
+  }
+  function cmd13_beq(tape_addr16) {
+    return [26, tape_addr16 & 255, (tape_addr16 & 65280) >> 8];
+  }
+  function cmd15_stack_preserve_call(tape_addr16) {
+    return [30, tape_addr16 & 255, (tape_addr16 & 65280) >> 8];
+  }
+  function cmd23_noop() {
+    return [46];
+  }
+
+  // autogen/remaining_tape.ts
+  var data = [
     24,
     29,
     0,
@@ -13189,27 +13188,8 @@
     9,
     255
   ];
-  function cmd00_write_param_to_reg(param16) {
-    return [0, param16 & 255, (param16 & 65280) >> 8];
-  }
-  function cmd01_store_reg_to_tape_addr(tape_addr16) {
-    return [2, tape_addr16 & 255, (tape_addr16 & 65280) >> 8];
-  }
-  function cmd04_sum_reg_param_to_reg(param16) {
-    return [8, param16 & 255, (param16 & 65280) >> 8];
-  }
-  function cmd06_check_reg16_is_param16(param16) {
-    return [12, param16 & 255, (param16 & 65280) >> 8];
-  }
-  function cmd13_beq(tape_addr16) {
-    return [26, tape_addr16 & 255, (tape_addr16 & 65280) >> 8];
-  }
-  function cmd15_stack_preserve_call(tape_addr16) {
-    return [30, tape_addr16 & 255, (tape_addr16 & 65280) >> 8];
-  }
-  function cmd23_noop() {
-    return [46];
-  }
+
+  // autogen/reconstructed_tape.ts
   function reconstruct_tape() {
     var tape = [];
     tape.push(...cmd00_write_param_to_reg(
@@ -13266,9 +13246,43 @@
       /*param16*/
       2
     ));
-    tape.push(...g_tape_remaining);
+    tape.push(...cmd13_beq(
+      /*tape_addr16*/
+      89
+    ));
+    tape.push(...cmd06_check_reg16_is_param16(
+      /*param16*/
+      1
+    ));
+    tape.push(...cmd13_beq(
+      /*tape_addr16*/
+      1130
+    ));
+    tape.push(...cmd06_check_reg16_is_param16(
+      /*param16*/
+      3
+    ));
+    tape.push(...cmd13_beq(
+      /*tape_addr16*/
+      362
+    ));
+    tape.push(...cmd06_check_reg16_is_param16(
+      /*param16*/
+      5
+    ));
+    tape.push(...cmd13_beq(
+      /*tape_addr16*/
+      68
+    ));
+    tape.push(...cmd15_stack_preserve_call(
+      /*tape_addr16*/
+      2757
+    ));
+    tape.push(...data);
     return tape;
   }
+
+  // mountdrag.ts
   var g_tape = reconstruct_tape();
   function verify_tape_integrity() {
     const expected_simple_checksum = 287251;
