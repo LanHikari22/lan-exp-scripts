@@ -1,4 +1,4 @@
-i,cmd_idx,g_data_chr,g_chr
+i,cmd_idx,g_data_cur,g_inst8
 0,20,2994,40
 1,1,2995,2
 2,0,2998,0

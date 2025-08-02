@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import sys
 import os
 import argparse
+import time
 import checkpipe as pipe
 
 script_path = os.path.dirname(os.path.realpath(__file__))
@@ -40,25 +41,19 @@ class CommandData:
 commands = [
     CommandData("cmd00", 0, "cmd00_write_param16_to_reg16(/*param16*/ {PARAM0})", [16]),
     CommandData(
-        "cmd00", 1, "cmd00_write_loaded_param16_to_reg16(/*param16*/ {PARAM0})", [16]
-    ),
-    CommandData(
         "cmd01", 2, "cmd01_store_reg16_to_tape_addr(/*addr16*/ {PARAM0})", [16]
     ),
     CommandData(
-        "cmd02", 4, "cmd02_store_loaded_reg16_to_loaded_param16(/*addr16*/ {PARAM0})", [16]
+        "cmd02",
+        4,
+        "cmd02_store_loaded_reg16_to_loaded_param16(/*addr16*/ {PARAM0})",
+        [16],
     ),
     CommandData(
         "cmd03", 6, "cmd03_set_loaded_reg16_to_param16(/*param16*/ {PARAM0})", [16]
     ),
     CommandData(
-        "cmd03", 7, "cmd03_set_loaded_reg16_to_loaded_param16(/*addr16*/ {PARAM0})", [16]
-    ),
-    CommandData(
         "cmd04", 8, "cmd04_sum_reg16_param16_to_reg16(/*param16*/ {PARAM0})", [16]
-    ),
-    CommandData(
-        "cmd04", 9, "cmd04_sum_reg16_loaded_param16_to_reg16(/*param16*/ {PARAM0})", [16]
     ),
     CommandData(
         "cmd05", 10, "cmd05_sub_param16_from_reg16(/*param16*/ {PARAM0})", [16]
@@ -67,26 +62,25 @@ commands = [
         "cmd06", 12, "cmd06_check_reg16_is_param16(/*param16*/ {PARAM0})", [16]
     ),
     CommandData(
-        "cmd06", 13, "cmd06_check_reg16_is_loaded_param16(/*param16*/ {PARAM0})", [16]
-    ),
-    CommandData(
         "cmd07", 14, "cmd07_check_reg16_lt_param16(/*param16*/ {PARAM0})", [16]
     ),
     CommandData(
-        "cmd07", 15, "cmd07_check_reg16_lt_loaded_param16(/*addr16*/ {PARAM0})", [16]
+        "cmd08", 16, "cmd08_check_reg16_and_param16(/*param16*/ {PARAM0})", [16]
     ),
     CommandData(
-        "cmd09", 18, "cmd09_check_reg16_and_param16(/*param16*/ {PARAM0})", [16]
+        "cmd09", 18, "cmd09_mask_reg16_and_param16_to_reg16(/*param16*/ {PARAM0})", [16]
+    ),
+    CommandData(
+        "cmd10", 20, "cmd10_check_reg16_or_param16(/*param16*/ {PARAM0})", [16]
+    ),
+    CommandData(
+        "cmd11", 22, "cmd11_check_reg16_xor_param16(/*param16*/ {PARAM0})", [16]
     ),
     CommandData("cmd12", 24, "cmd12_goto(/*addr16*/ {PARAM0})", [16]),
     CommandData("cmd13", 26, "cmd13_beq(/*addr16*/ {PARAM0})", [16]),
     CommandData("cmd14", 28, "cmd14_bne(/*addr16*/ {PARAM0})", [16]),
-    CommandData(
-        "cmd15", 30, "cmd15_stack_preserve_call(/*addr16*/ {PARAM0})", [16]
-    ),
-    CommandData(
-        "cmd16", 32, "cmd16_return()", []
-    ),
+    CommandData("cmd15", 30, "cmd15_stack_preserve_call(/*addr16*/ {PARAM0})", [16]),
+    CommandData("cmd16", 32, "cmd16_return()", []),
     CommandData("cmd17", 34, "cmd17_push_reg16_to_stack()", []),
     CommandData("cmd18", 36, "cmd18_pop_stack_to_reg16()", []),
     CommandData("cmd19", 38, "cmd19_issue_new_frame()", []),
@@ -94,6 +88,7 @@ commands = [
     CommandData("cmd21", 42, "cmd21_set_reg16_to_cur_seconds()", []),
     CommandData("cmd22", 44, "cmd22_set_dom_href_to_reg16()", []),
     CommandData("cmd23", 46, "cmd23_noop()", []),
+    CommandData("cmd25", 50, "cmd25_bug()", []),
 ]
 
 
@@ -106,7 +101,7 @@ def scan_next_command(
 ) -> Tuple[Optional[Tuple[CommandData, List[int]]], List[int]]:
     """
     returns (
-        optional_command_data_tup: This includes the command data and parsed list of params
+        optional_command_data_tup: This includes the command data and the parsed binary content
         remaining_tape: The remaining tape after scanning one command
       )
     """
@@ -118,10 +113,17 @@ def scan_next_command(
     # Read the first byte and route
     command_byte = tape[0]
 
+    def activation_byte_matches(activation_byte: int, command_byte: int) -> bool:
+        assert activation_byte % 2 == 0
+
+        return command_byte == activation_byte or command_byte == activation_byte + 1
+
     command = (
         commands
         | pipe.OfIter[CommandData].filter(
-            lambda command: command.activation_byte == command_byte
+            lambda command: activation_byte_matches(
+                command.activation_byte, command_byte
+            )
         )
         | pipe.OfIter[CommandData].to_list()
         | pipe.Of[List[CommandData]].map(lambda lst: lst[0] if len(lst) == 1 else None)
@@ -138,18 +140,18 @@ def scan_next_command(
         elif width == 8:
             return tape[i + 1]
         else:
-            assert f"unsupported width {width}"
+            raise Exception(f"unsupported width {width}")
 
-    values_read = (
-        command.param_widths
+    content = (
+        [command_byte] + (command.param_widths
         | pipe.OfIter[int].enumerate()
         | pipe.OfIter[Tuple[int, int]].map(
             pipe.tup2_unpack(enumerated_param_width_to_read_value)
         )
-        | pipe.OfIter[int].to_list()
+        | pipe.OfIter[int].to_list())
     )
 
-    return ((command, values_read), tape[1 + compute_num_command_bytes(command) :])
+    return ((command, content), tape[1 + compute_num_command_bytes(command) :])
 
 
 def format_command_params(command: CommandData, params: List[int]) -> List[str]:
@@ -173,13 +175,19 @@ def format_command_params(command: CommandData, params: List[int]) -> List[str]:
     return formatted_params
 
 
-def format_command(command: CommandData, params: List[int]) -> str:
-    params_s = format_command_params(command, params)
+def format_command(command: CommandData, content: List[int]) -> str:
+    assert len(content) >= 1
+
+    command_byte = content[0]
+    params_s = format_command_params(command, content[1:])
 
     mut_result = command.format
 
     for i, param_s in enumerate(params_s):
         mut_result = mut_result.replace("{PARAM" + str(i) + "}", param_s)
+    
+    if command_byte % 2 == 1:
+        mut_result = mut_result.replace("cmd", "cmdl")
 
     return mut_result
 
@@ -213,13 +221,17 @@ def compute_program_counter(commands: List[CommandData], i: int) -> int:
 
 
 def app_reconstruct_tape():
+    start = time.time()
+
     tape = read_tape_data()
 
-    content = 'import * as c from "../reconstructed_commands.ts"\n'
-    content += 'import * as remaining_tape from "./remaining_tape.ts";\n\n'
+    mut_content = 'import * as c from "../reconstructed_commands.ts"\n'
+    mut_content += 'import * as remaining_tape from "./remaining_tape.ts";\n\n'
 
-    content += "export function reconstruct_tape(): number[] {\n"
-    content += "  var tape: number[] = [];\n\n"
+    mut_content += "export function reconstruct_tape(): number[] {\n"
+    mut_content += "  var tape: number[] = [];\n\n"
+
+    mut_content_csv = "pc16,cmd,name,cmd_byte,param,byte1,byte2,format\n"
 
     mut_commands: List[Tuple[CommandData, List[int]]] = []
     mut_remaining_tape = tape
@@ -239,22 +251,39 @@ def app_reconstruct_tape():
         | pipe.OfIter[CommandData].to_list()
     )
 
-    for i, (command, params) in enumerate(mut_commands):
-        command_s = format_command(command, params)
+    for i, (command, command_content) in enumerate(mut_commands):
+        command_s = format_command(command, command_content)
         pc = compute_program_counter(raw_commands, i)
 
-        content += f"  /*0x{pc:04x}*/ tape.push(...c.{command_s});\n"
+        name = (
+            command_s
+            | pipe.Of[str].map(lambda s: s.split('(')[0])
+        )
 
-    content += "  tape.push(...remaining_tape.data);\n\n"
-    content += "  return tape;\n"
-    content += "}"
+        mut_content += f"  /*0x{pc:04x}*/ tape.push(...c.{command_s});\n"
+
+        if len(command_content) == 1:
+            mut_content_csv += f'0x{pc:04x},{command.name},{name},{command_content[0]},-1,-1,-1,{command_s}\n'
+        else:
+            byte1 = command_content[1] & 0x00FF
+            byte2 = (command_content[1] & 0xFF00) >> 8
+            mut_content_csv += f'0x{pc:04x},{command.name},{name},{command_content[0]},{command_content[1]},{byte1},{byte2},{command_s}\n'
+
+    mut_content += "  tape.push(...remaining_tape.data);\n\n"
+    mut_content += "  return tape;\n"
+    mut_content += "}"
 
     create_remaining_tape_ts(mut_remaining_tape)
 
     with open(f"{script_path}/../autogen/reconstructed_tape.ts", "w") as f:
-        f.write(content)
+        f.write(mut_content)
 
-    print("Created autogen/reconstructed_tape.ts")
+    with open(f"{script_path}/../experiments/tape_program_data.csv", "w") as f:
+        f.write(mut_content_csv)
+
+    end = time.time()
+
+    print(f'Created autogen/reconstructed_tape.ts in {end-start} seconds')
 
 
 def main(args: argparse.Namespace):

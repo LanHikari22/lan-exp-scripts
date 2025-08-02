@@ -1,1420 +1,121 @@
   // reconstructed_commands.ts
   function cmd00_write_param16_to_reg16(param16) {
-    return [0, param16 & 255, (param16 & 65280) >> 8];
+    return [0 + 0, param16 & 255, (param16 & 65280) >> 8];
   }
-  function cmd00_write_loaded_param16_to_reg16(param16) {
-    return [1, param16 & 255, (param16 & 65280) >> 8];
+  function cmd01_store_reg16_to_tape_addr(addr162) {
+    return [2 + 0, addr162 & 255, (addr162 & 65280) >> 8];
   }
-  function cmd01_store_reg16_to_tape_addr(addr16) {
-    return [2, addr16 & 255, (addr16 & 65280) >> 8];
-  }
-  function cmd02_store_loaded_reg16_to_loaded_param16(addr16) {
-    return [4, addr16 & 255, (addr16 & 65280) >> 8];
+  function cmd02_store_loaded_reg16_to_loaded_param16(addr162) {
+    return [4 + 0, addr162 & 255, (addr162 & 65280) >> 8];
   }
   function cmd03_set_loaded_reg16_to_param16(param16) {
-    return [6, param16 & 255, (param16 & 65280) >> 8];
-  }
-  function cmd03_set_loaded_reg16_to_loaded_param16(addr16) {
-    return [7, addr16 & 255, (addr16 & 65280) >> 8];
+    return [6 + 0, param16 & 255, (param16 & 65280) >> 8];
   }
   function cmd04_sum_reg16_param16_to_reg16(param16) {
-    return [8, param16 & 255, (param16 & 65280) >> 8];
-  }
-  function cmd04_sum_reg16_loaded_param16_to_reg16(param16) {
-    return [9, param16 & 255, (param16 & 65280) >> 8];
+    return [8 + 0, param16 & 255, (param16 & 65280) >> 8];
   }
   function cmd05_sub_param16_from_reg16(param16) {
-    return [10, param16 & 255, (param16 & 65280) >> 8];
+    return [10 + 0, param16 & 255, (param16 & 65280) >> 8];
   }
   function cmd06_check_reg16_is_param16(param16) {
-    return [12, param16 & 255, (param16 & 65280) >> 8];
-  }
-  function cmd06_check_reg16_is_loaded_param16(param16) {
-    return [13, param16 & 255, (param16 & 65280) >> 8];
+    return [12 + 0, param16 & 255, (param16 & 65280) >> 8];
   }
   function cmd07_check_reg16_lt_param16(param16) {
-    return [14, param16 & 255, (param16 & 65280) >> 8];
+    return [14 + 0, param16 & 255, (param16 & 65280) >> 8];
   }
-  function cmd07_check_reg16_lt_loaded_param16(addr16) {
-    return [15, addr16 & 255, (addr16 & 65280) >> 8];
+  function cmd08_check_reg16_and_param16(param16) {
+    return [16 + 0, param16 & 255, (param16 & 65280) >> 8];
   }
-  function cmd09_check_reg16_and_param16(param16) {
-    return [18, param16 & 255, (param16 & 65280) >> 8];
+  function cmd09_mask_reg16_and_param16_to_reg16(param16) {
+    return [18 + 0, param16 & 255, (param16 & 65280) >> 8];
   }
-  function cmd12_goto(addr16) {
-    return [24, addr16 & 255, (addr16 & 65280) >> 8];
+  function cmd10_check_reg16_or_param16(param16) {
+    return [20 + 0, param16 & 255, (param16 & 65280) >> 8];
   }
-  function cmd13_beq(addr16) {
-    return [26, addr16 & 255, (addr16 & 65280) >> 8];
+  function cmd11_check_reg16_xor_param16(param16) {
+    return [22 + 0, param16 & 255, (param16 & 65280) >> 8];
   }
-  function cmd14_bne(addr16) {
-    return [28, addr16 & 255, (addr16 & 65280) >> 8];
+  function cmd12_goto(addr162) {
+    return [24 + 0, addr162 & 255, (addr162 & 65280) >> 8];
   }
-  function cmd15_stack_preserve_call(addr16) {
-    return [30, addr16 & 255, (addr16 & 65280) >> 8];
+  function cmd13_beq(addr162) {
+    return [26 + 0, addr162 & 255, (addr162 & 65280) >> 8];
+  }
+  function cmd14_bne(addr162) {
+    return [28 + 0, addr162 & 255, (addr162 & 65280) >> 8];
+  }
+  function cmd15_stack_preserve_call(addr162) {
+    return [30 + 0, addr162 & 255, (addr162 & 65280) >> 8];
   }
   function cmd16_return() {
-    return [32];
+    return [32 + 0];
   }
   function cmd17_push_reg16_to_stack() {
-    return [34];
+    return [34 + 0];
   }
   function cmd18_pop_stack_to_reg16() {
-    return [36];
+    return [36 + 0];
   }
   function cmd19_issue_new_frame() {
-    return [38];
+    return [38 + 0];
   }
   function cmd20_read_joypad_input_and_set_to_reg16() {
-    return [40];
+    return [40 + 0];
   }
   function cmd21_set_reg16_to_cur_seconds() {
-    return [42];
+    return [42 + 0];
   }
   function cmd22_set_dom_href_to_reg16() {
-    return [44];
+    return [44 + 0];
   }
   function cmd23_noop() {
-    return [46];
+    return [46 + 0];
+  }
+  function cmdl00_write_param16_to_reg16(param16) {
+    return [0 + 1, param16 & 255, (param16 & 65280) >> 8];
+  }
+  function cmdl01_store_reg16_to_tape_addr(addr162) {
+    return [2 + 1, addr162 & 255, (addr162 & 65280) >> 8];
+  }
+  function cmdl02_store_loaded_reg16_to_loaded_param16(addr162) {
+    return [4 + 1, addr162 & 255, (addr162 & 65280) >> 8];
+  }
+  function cmdl03_set_loaded_reg16_to_param16(param16) {
+    return [6 + 1, param16 & 255, (param16 & 65280) >> 8];
+  }
+  function cmdl04_sum_reg16_param16_to_reg16(param16) {
+    return [8 + 1, param16 & 255, (param16 & 65280) >> 8];
+  }
+  function cmdl05_sub_param16_from_reg16(param16) {
+    return [10 + 1, param16 & 255, (param16 & 65280) >> 8];
+  }
+  function cmdl06_check_reg16_is_param16(param16) {
+    return [12 + 1, param16 & 255, (param16 & 65280) >> 8];
+  }
+  function cmdl07_check_reg16_lt_param16(param16) {
+    return [14 + 1, param16 & 255, (param16 & 65280) >> 8];
+  }
+  function cmdl09_mask_reg16_and_param16_to_reg16(param16) {
+    return [18 + 1, param16 & 255, (param16 & 65280) >> 8];
+  }
+  function cmdl10_check_reg16_or_param16(param16) {
+    return [20 + 1, param16 & 255, (param16 & 65280) >> 8];
+  }
+  function cmdl11_check_reg16_xor_param16(param16) {
+    return [22 + 1, param16 & 255, (param16 & 65280) >> 8];
+  }
+  function cmdl12_goto(addr162) {
+    return [24 + 1, addr162 & 255, (addr162 & 65280) >> 8];
+  }
+  function cmdl15_stack_preserve_call(addr162) {
+    return [30 + 1, addr162 & 255, (addr162 & 65280) >> 8];
+  }
+  function cmdl25_bug() {
+    return [50 + 1];
   }
 
   // autogen/remaining_tape.ts
   var data = [
-    11,
-    187,
-    51,
-    13,
-    188,
-    51,
-    26,
-    103,
-    11,
-    0,
-    0,
-    0,
-    2,
-    188,
-    51,
-    36,
-    24,
-    197,
-    10,
-    36,
-    0,
-    121,
-    30,
-    0,
-    10,
-    0,
-    2,
-    133,
-    11,
-    0,
-    8,
-    0,
-    2,
-    74,
-    10,
-    0,
-    62,
-    0,
-    2,
-    132,
-    11,
-    0,
-    125,
-    0,
-    2,
-    73,
-    10,
-    24,
-    197,
-    10,
-    3,
-    8,
-    1,
-    0,
-    2,
-    176,
-    51,
-    14,
-    12,
-    0,
-    36,
-    26,
-    197,
-    10,
-    36,
-    0,
-    6,
-    0,
-    2,
-    175,
-    11,
-    0,
-    253,
-    0,
-    2,
-    47,
-    6,
-    0,
-    23,
-    0,
-    2,
-    174,
-    11,
-    0,
-    3,
-    0,
-    2,
-    48,
-    6,
-    24,
-    197,
-    10,
-    38,
-    40,
-    2,
-    173,
-    51,
-    0,
-    255,
-    0,
-    23,
-    174,
-    51,
-    19,
-    173,
-    51,
-    34,
-    1,
-    173,
-    51,
-    2,
-    174,
-    51,
-    36,
-    2,
-    173,
-    51,
-    16,
-    1,
-    0,
-    26,
-    240,
-    11,
-    16,
-    2,
-    0,
-    26,
-    246,
-    11,
-    16,
-    4,
-    0,
-    26,
-    252,
-    11,
-    16,
-    8,
-    0,
-    26,
-    2,
-    12,
-    16,
-    16,
-    0,
-    26,
-    8,
-    12,
-    16,
-    32,
-    0,
-    26,
-    14,
-    12,
-    24,
-    176,
-    11,
-    0,
-    0,
-    0,
-    24,
-    20,
-    12,
-    0,
-    2,
-    0,
-    24,
-    20,
-    12,
-    0,
-    1,
-    0,
-    24,
-    20,
-    12,
-    0,
-    3,
-    0,
-    24,
-    20,
-    12,
-    0,
-    4,
-    0,
-    24,
-    41,
-    12,
-    0,
-    5,
-    0,
-    24,
-    41,
-    12,
-    2,
-    178,
-    51,
-    9,
-    182,
-    51,
-    14,
-    4,
-    0,
-    26,
-    35,
-    12,
-    10,
-    4,
-    0,
-    2,
-    177,
-    51,
-    24,
-    47,
-    12,
-    2,
-    178,
-    51,
-    2,
-    177,
-    51,
-    0,
-    202,
-    51,
-    9,
-    175,
-    51,
-    7,
-    178,
-    51,
-    1,
-    175,
-    51,
-    8,
-    1,
-    0,
-    2,
-    175,
-    51,
-    24,
-    111,
-    12,
-    12,
-    1,
-    0,
-    28,
-    81,
-    12,
-    0,
-    209,
-    50,
-    46,
-    0,
-    1,
-    0,
-    12,
-    7,
-    0,
-    26,
-    115,
-    12,
-    12,
-    16,
-    0,
-    26,
-    115,
-    12,
-    12,
-    25,
-    0,
-    26,
-    122,
-    12,
-    12,
-    34,
-    0,
-    26,
-    122,
-    12,
-    12,
-    44,
-    0,
-    26,
-    129,
-    12,
-    1,
-    177,
-    51,
-    32,
-    0,
-    247,
-    50,
-    46,
-    24,
-    111,
-    12,
-    0,
-    13,
-    51,
-    46,
-    24,
-    111,
-    12,
-    0,
-    68,
-    51,
-    46,
-    24,
-    136,
-    12,
-    38,
-    24,
-    136,
-    12,
-    23,
-    5,
-    12,
-    3,
-    15,
-    13,
-    5,
-    0,
-    20,
-    15,
-    0,
-    13,
-    15,
-    21,
-    14,
-    20,
-    1,
-    9,
-    14,
-    0,
-    1,
-    14,
-    4,
-    0,
-    4,
-    18,
-    1,
-    7,
-    15,
-    14,
-    31,
-    25,
-    15,
-    21,
-    0,
-    8,
-    1,
-    22,
-    5,
-    0,
-    12,
-    5,
-    6,
-    20,
-    0,
-    25,
-    15,
-    21,
-    18,
-    0,
-    22,
-    9,
-    12,
-    12,
-    1,
-    7,
-    5,
-    0,
-    1,
-    14,
-    4,
-    0,
-    20,
-    18,
-    1,
-    22,
-    5,
-    12,
-    5,
-    4,
-    0,
-    14,
-    15,
-    18,
-    20,
-    8,
-    0,
-    20,
-    8,
-    18,
-    15,
-    21,
-    7,
-    8,
-    0,
-    20,
-    8,
-    5,
-    0,
-    16,
-    12,
-    1,
-    9,
-    14,
-    19,
-    0,
-    2,
-    18,
-    9,
-    14,
-    7,
-    9,
-    14,
-    7,
-    0,
-    14,
-    15,
-    20,
-    8,
-    9,
-    14,
-    7,
-    0,
-    2,
-    21,
-    20,
-    0,
-    25,
-    15,
-    21,
-    18,
-    0,
-    23,
-    9,
-    20,
-    19,
-    0,
-    1,
-    14,
-    4,
-    0,
-    19,
-    5,
-    14,
-    19,
-    5,
-    0,
-    15,
-    6,
-    0,
-    1,
-    4,
-    22,
-    5,
-    14,
-    20,
-    21,
-    18,
-    5,
-    255,
-    25,
-    15,
-    21,
-    0,
-    1,
-    18,
-    18,
-    9,
-    22,
-    5,
-    0,
-    1,
-    20,
-    0,
-    1,
-    0,
-    3,
-    18,
-    15,
-    19,
-    19,
-    18,
-    15,
-    1,
-    4,
-    19,
-    31,
-    20,
-    8,
-    5,
-    0,
-    8,
-    9,
-    7,
-    8,
-    12,
-    9,
-    7,
-    8,
-    20,
-    0,
-    13,
-    15,
-    21,
-    14,
-    20,
-    1,
-    9,
-    14,
-    19,
-    0,
-    20,
-    15,
-    23,
-    5,
-    18,
-    0,
-    20,
-    15,
-    0,
-    20,
-    8,
-    5,
-    0,
-    14,
-    15,
-    18,
-    20,
-    8,
-    31,
-    1,
-    0,
-    20,
-    18,
-    1,
-    22,
-    5,
-    12,
-    9,
-    14,
-    7,
-    0,
-    3,
-    1,
-    18,
-    1,
-    22,
-    1,
-    14,
-    0,
-    9,
-    19,
-    0,
-    19,
-    20,
-    15,
-    16,
-    16,
-    5,
-    4,
-    0,
-    20,
-    15,
-    0,
-    20,
-    8,
-    5,
-    0,
-    5,
-    1,
-    19,
-    20,
-    31,
-    1,
-    0,
-    6,
-    15,
-    18,
-    5,
-    19,
-    20,
-    0,
-    9,
-    19,
-    0,
-    20,
-    15,
-    0,
-    20,
-    8,
-    5,
-    0,
-    23,
-    5,
-    19,
-    20,
-    31,
-    25,
-    15,
-    21,
-    18,
-    0,
-    22,
-    9,
-    12,
-    12,
-    1,
-    7,
-    5,
-    0,
-    9,
-    19,
-    0,
-    2,
-    1,
-    3,
-    11,
-    0,
-    19,
-    15,
-    21,
-    20,
-    8,
-    255,
-    20,
-    8,
-    5,
-    0,
-    5,
-    12,
-    5,
-    22,
-    1,
-    20,
-    15,
-    18,
-    0,
-    9,
-    19,
-    0,
-    8,
-    5,
-    18,
-    5,
-    255,
-    20,
-    8,
-    5,
-    0,
-    5,
-    12,
-    5,
-    22,
-    1,
-    20,
-    15,
-    18,
-    0,
-    8,
-    21,
-    13,
-    19,
-    0,
-    1,
-    19,
-    0,
-    25,
-    15,
-    21,
-    0,
-    18,
-    9,
-    4,
-    5,
-    0,
-    9,
-    20,
-    0,
-    2,
-    1,
-    3,
-    11,
-    0,
-    21,
-    16,
-    0,
-    20,
-    8,
-    5,
-    0,
-    13,
-    15,
-    21,
-    14,
-    20,
-    1,
-    9,
-    14,
-    255,
-    1,
-    0,
-    7,
-    5,
-    14,
-    20,
-    12,
-    5,
-    0,
-    2,
-    18,
-    5,
-    5,
-    26,
-    5,
-    0,
-    2,
-    12,
-    15,
-    23,
-    19,
-    31,
-    20,
-    8,
-    5,
-    0,
-    15,
-    3,
-    3,
-    1,
-    19,
-    9,
-    15,
-    14,
-    1,
-    12,
-    0,
-    3,
-    12,
-    15,
-    21,
-    4,
-    0,
-    13,
-    5,
-    1,
-    14,
-    4,
-    5,
-    18,
-    19,
-    0,
-    2,
-    25,
-    0,
-    9,
-    14,
-    0,
-    20,
-    8,
-    5,
-    0,
-    19,
-    11,
-    25,
-    255,
-    25,
-    15,
-    21,
-    0,
-    19,
-    20,
-    1,
-    14,
-    4,
-    0,
-    9,
-    14,
-    0,
-    20,
-    8,
-    5,
-    0,
-    13,
-    9,
-    4,
-    19,
-    20,
-    0,
-    15,
-    6,
-    0,
-    1,
-    0,
-    3,
-    1,
-    18,
-    1,
-    22,
-    1,
-    14,
-    0,
-    15,
-    6,
-    0,
-    13,
-    5,
-    18,
-    3,
-    8,
-    1,
-    14,
-    20,
-    19,
-    31,
-    20,
-    8,
-    5,
-    25,
-    0,
-    12,
-    15,
-    15,
-    11,
-    0,
-    5,
-    1,
-    7,
-    5,
-    18,
-    0,
-    20,
-    15,
-    0,
-    2,
-    21,
-    25,
-    0,
-    1,
-    14,
-    25,
-    20,
-    8,
-    9,
-    14,
-    7,
-    0,
-    25,
-    15,
-    21,
-    30,
-    18,
-    5,
-    0,
-    3,
-    1,
-    18,
-    18,
-    25,
-    9,
-    14,
-    7,
-    31,
-    15,
-    14,
-    5,
-    0,
-    15,
-    6,
-    0,
-    20,
-    8,
-    5,
-    0,
-    13,
-    5,
-    18,
-    3,
-    8,
-    1,
-    14,
-    20,
-    19,
-    0,
-    19,
-    5,
-    12,
-    12,
-    19,
-    0,
-    1,
-    24,
-    5,
-    19,
-    31,
-    1,
-    0,
-    20,
-    5,
-    14,
-    20,
-    0,
-    9,
-    19,
-    0,
-    19,
-    5,
-    20,
-    0,
-    21,
-    16,
-    0,
-    20,
-    15,
-    0,
-    20,
-    8,
-    5,
-    0,
-    5,
-    1,
-    19,
-    20,
-    31,
-    1,
-    0,
-    18,
-    15,
-    1,
-    4,
-    0,
-    12,
-    5,
-    1,
-    4,
-    19,
-    0,
-    2,
-    1,
-    3,
-    11,
-    0,
-    23,
-    5,
-    19,
-    20,
-    0,
-    20,
-    15,
-    0,
-    20,
-    8,
-    5,
-    0,
-    3,
-    18,
-    15,
-    19,
-    19,
-    18,
-    15,
-    1,
-    4,
-    19,
-    31,
-    1,
-    0,
-    23,
-    5,
-    1,
-    20,
-    8,
-    5,
-    18,
-    5,
-    4,
-    0,
-    16,
-    1,
-    20,
-    8,
-    0,
-    12,
-    5,
-    1,
-    4,
-    19,
-    0,
-    19,
-    15,
-    21,
-    20,
-    8,
-    0,
-    20,
-    15,
-    23,
-    1,
-    18,
-    4,
-    19,
-    0,
-    25,
-    15,
-    21,
-    18,
-    0,
-    8,
-    15,
-    21,
-    19,
-    5,
-    255,
-    25,
-    15,
-    21,
-    0,
-    4,
-    15,
-    14,
-    30,
-    20,
-    0,
-    8,
-    1,
-    22,
-    5,
-    0,
-    5,
-    14,
-    15,
-    21,
-    7,
-    8,
-    0,
-    20,
-    15,
-    0,
-    2,
-    21,
-    25,
-    0,
-    1,
-    14,
-    0,
-    1,
-    24,
-    5,
-    255,
-    25,
-    15,
-    21,
-    0,
-    4,
-    15,
-    14,
-    30,
-    20,
-    0,
-    8,
-    1,
-    22,
-    5,
-    0,
-    1,
-    14,
-    25,
-    20,
-    8,
-    9,
-    14,
-    7,
-    0,
-    20,
-    15,
-    0,
-    19,
-    5,
-    12,
-    12,
-    255,
-    25,
-    15,
-    21,
-    0,
-    19,
-    5,
-    12,
-    12,
-    0,
-    15,
-    6,
-    6,
-    0,
-    23,
-    8,
-    1,
-    20,
-    0,
-    25,
-    15,
-    21,
-    0,
-    23,
-    5,
-    18,
-    5,
-    0,
-    8,
-    15,
-    12,
-    4,
-    9,
-    14,
-    7,
-    0,
-    6,
-    15,
-    18,
-    0,
-    19,
-    15,
-    13,
-    5,
-    0,
-    16,
-    15,
-    3,
-    11,
-    5,
-    20,
-    0,
-    3,
-    8,
-    1,
-    14,
-    7,
-    5,
-    255,
-    25,
-    15,
-    21,
-    0,
-    2,
-    21,
-    25,
-    0,
-    1,
-    0,
-    19,
-    20,
-    21,
-    18,
-    4,
-    25,
-    0,
-    12,
-    15,
-    15,
-    11,
-    9,
-    14,
-    7,
-    0,
-    1,
-    24,
-    5,
-    0,
-    1,
-    14,
-    4,
-    0,
-    20,
-    1,
-    11,
-    5,
-    0,
-    9,
-    20,
-    0,
-    23,
-    9,
-    20,
-    8,
-    0,
-    25,
-    15,
-    21,
-    255,
-    25,
-    15,
-    21,
-    0,
-    5,
-    14,
-    20,
-    5,
-    18,
-    0,
-    20,
-    8,
-    5,
-    0,
-    15,
-    16,
-    5,
-    14,
-    0,
-    20,
-    5,
-    14,
-    20,
-    31,
-    1,
-    0,
-    12,
-    1,
-    18,
-    7,
-    5,
-    0,
-    20,
-    1,
-    2,
-    12,
-    5,
-    0,
-    19,
-    20,
-    1,
-    14,
-    4,
-    19,
-    0,
-    1,
-    20,
-    0,
-    20,
-    8,
-    5,
-    0,
-    3,
-    5,
-    14,
-    20,
-    18,
-    5,
-    31,
-    20,
-    8,
-    5,
-    0,
-    23,
-    1,
-    25,
-    0,
-    15,
-    21,
-    20,
-    0,
-    9,
-    19,
-    0,
-    23,
-    5,
-    19,
-    20,
-    255,
-    1,
-    0,
-    19,
-    9,
-    14,
-    7,
-    12,
-    5,
-    0,
-    21,
-    19,
-    5,
-    0,
-    11,
-    5,
-    25,
-    0,
-    12,
-    9,
-    5,
-    19,
-    0,
-    15,
-    14,
-    0,
-    20,
-    8,
-    5,
-    0,
-    20,
-    1,
-    2,
-    12,
-    5,
-    255,
-    25,
-    15,
-    21,
-    0,
-    8,
-    5,
-    1,
-    4,
-    0,
-    23,
-    5,
-    19,
-    20,
-    0,
-    1,
-    14,
-    4,
-    0,
-    5,
-    24,
-    9,
-    20,
-    0,
-    20,
-    8,
-    5,
-    0,
-    20,
-    5,
-    14,
-    20,
     255,
     25,
     15,
@@ -10505,7 +9206,7 @@
       29
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -10588,7 +9289,7 @@
       /*addr16*/
       93
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13237
     ));
@@ -10609,7 +9310,7 @@
       /*addr16*/
       93
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13236
     ));
@@ -10693,7 +9394,7 @@
       4090
     ));
     tape.push(...cmd23_noop());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13241
     ));
@@ -10790,7 +9491,7 @@
       /*param16*/
       3
     ));
-    tape.push(...cmd04_sum_reg16_loaded_param16_to_reg16(
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
       /*param16*/
       13238
     ));
@@ -10819,7 +9520,7 @@
       /*addr16*/
       89
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13241
     ));
@@ -10869,7 +9570,7 @@
       225
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -10948,7 +9649,7 @@
       /*addr16*/
       366
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13251
     ));
@@ -10969,7 +9670,7 @@
       /*addr16*/
       366
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -10997,7 +9698,7 @@
       /*addr16*/
       399
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13251
     ));
@@ -11094,7 +9795,7 @@
       488
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -11121,7 +9822,7 @@
       4811
     ));
     tape.push(...cmd23_noop());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13242
     ));
@@ -11183,7 +9884,7 @@
       550
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13242
     ));
@@ -11226,7 +9927,7 @@
       550
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -11290,7 +9991,7 @@
       638
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13237
     ));
@@ -11312,7 +10013,7 @@
       /*addr16*/
       638
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -11355,7 +10056,7 @@
       5623
     ));
     tape.push(...cmd23_noop());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13240
     ));
@@ -11372,7 +10073,7 @@
       4442
     ));
     tape.push(...cmd23_noop());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13239
     ));
@@ -11434,7 +10135,7 @@
       742
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13240
     ));
@@ -11476,7 +10177,7 @@
       /*addr16*/
       742
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13251
     ));
@@ -11498,7 +10199,7 @@
       742
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13239
     ));
@@ -11529,7 +10230,7 @@
       1756
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -11543,7 +10244,7 @@
       892
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -11608,7 +10309,7 @@
       5736
     ));
     tape.push(...cmd23_noop());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13248
     ));
@@ -11677,7 +10378,7 @@
       /*addr16*/
       929
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -11708,7 +10409,7 @@
       3208
     ));
     tape.push(...cmd18_pop_stack_to_reg16());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13237
     ));
@@ -11731,7 +10432,7 @@
       1021
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -11758,7 +10459,7 @@
       6265
     ));
     tape.push(...cmd23_noop());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13246
     ));
@@ -11812,7 +10513,7 @@
       1038
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13246
     ));
@@ -11864,7 +10565,7 @@
       906
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -11937,7 +10638,7 @@
       1134
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -11951,7 +10652,7 @@
       1186
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -11981,7 +10682,7 @@
       /*addr16*/
       1254
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13234
     ));
@@ -11993,7 +10694,7 @@
       /*addr16*/
       1228
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13233
     ));
@@ -12062,7 +10763,7 @@
       7128
     ));
     tape.push(...cmd23_noop());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13253
     ));
@@ -12140,7 +10841,7 @@
       1271
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13253
     ));
@@ -12193,7 +10894,7 @@
       1437
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13253
     ));
@@ -12216,7 +10917,7 @@
       1271
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13253
     ));
@@ -12230,7 +10931,7 @@
       1310
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -12352,7 +11053,7 @@
       /*addr16*/
       1441
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13252
     ));
@@ -12373,7 +11074,7 @@
       /*addr16*/
       1441
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -12401,7 +11102,7 @@
       /*addr16*/
       1474
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13252
     ));
@@ -12461,7 +11162,7 @@
       7682
     ));
     tape.push(...cmd23_noop());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13255
     ));
@@ -12514,7 +11215,7 @@
       /*addr16*/
       1576
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13255
     ));
@@ -12539,7 +11240,7 @@
       7890
     ));
     tape.push(...cmd23_noop());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -12586,7 +11287,7 @@
       8005
     ));
     tape.push(...cmd23_noop());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13254
     ));
@@ -12693,7 +11394,7 @@
       1671
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -12720,7 +11421,7 @@
       8425
     ));
     tape.push(...cmd23_noop());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13239
     ));
@@ -12737,7 +11438,7 @@
       9639
     ));
     tape.push(...cmd23_noop());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13249
     ));
@@ -12807,7 +11508,7 @@
       1786
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13239
     ));
@@ -12842,7 +11543,7 @@
       712
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -12856,7 +11557,7 @@
       1908
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -12891,7 +11592,7 @@
       1786
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13249
     ));
@@ -12963,7 +11664,7 @@
       /*addr16*/
       1919
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13237
     ));
@@ -12988,11 +11689,11 @@
       8944
     ));
     tape.push(...cmd23_noop());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13231
     ));
-    tape.push(...cmd09_check_reg16_and_param16(
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
       /*param16*/
       3
     ));
@@ -13083,7 +11784,7 @@
       1919
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -13097,7 +11798,7 @@
       2093
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -13114,11 +11815,11 @@
       /*addr16*/
       2825
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13231
     ));
-    tape.push(...cmd09_check_reg16_and_param16(
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
       /*param16*/
       7
     ));
@@ -13134,7 +11835,7 @@
       /*addr16*/
       13244
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13244
     ));
@@ -13164,7 +11865,7 @@
       /*addr16*/
       1919
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13256
     ));
@@ -13336,7 +12037,7 @@
       10227
     ));
     tape.push(...cmd23_noop());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13247
     ));
@@ -13362,7 +12063,7 @@
       10354
     ));
     tape.push(...cmd23_noop());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13250
     ));
@@ -13419,7 +12120,7 @@
       /*addr16*/
       2261
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -13491,7 +12192,7 @@
       2261
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13247
     ));
@@ -13505,7 +12206,7 @@
       2288
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13250
     ));
@@ -13561,7 +12262,7 @@
       10621
     ));
     tape.push(...cmd23_noop());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13231
     ));
@@ -13649,7 +12350,7 @@
       /*addr16*/
       3208
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -13762,7 +12463,7 @@
       12225
     ));
     tape.push(...cmd23_noop());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13257
     ));
@@ -13783,7 +12484,7 @@
       /*addr16*/
       3208
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -13872,7 +12573,7 @@
       2669
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -13886,7 +12587,7 @@
       2676
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13235
     ));
@@ -13942,7 +12643,7 @@
       /*addr16*/
       2626
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13231
     ));
@@ -13954,7 +12655,7 @@
       /*param16*/
       13258
     ));
-    tape.push(...cmd04_sum_reg16_loaded_param16_to_reg16(
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
       /*param16*/
       2754
     ));
@@ -13966,19 +12667,19 @@
       /*param16*/
       13222
     ));
-    tape.push(...cmd04_sum_reg16_loaded_param16_to_reg16(
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
       /*param16*/
       13221
     ));
-    tape.push(...cmd04_sum_reg16_loaded_param16_to_reg16(
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
       /*param16*/
       2754
     ));
-    tape.push(...cmd03_set_loaded_reg16_to_loaded_param16(
-      /*addr16*/
+    tape.push(...cmdl03_set_loaded_reg16_to_param16(
+      /*param16*/
       2755
     ));
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       2754
     ));
@@ -13990,7 +12691,7 @@
       /*addr16*/
       2754
     ));
-    tape.push(...cmd06_check_reg16_is_loaded_param16(
+    tape.push(...cmdl06_check_reg16_is_param16(
       /*param16*/
       2756
     ));
@@ -14002,11 +12703,11 @@
       /*param16*/
       13222
     ));
-    tape.push(...cmd04_sum_reg16_loaded_param16_to_reg16(
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
       /*param16*/
       13221
     ));
-    tape.push(...cmd04_sum_reg16_loaded_param16_to_reg16(
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
       /*param16*/
       2754
     ));
@@ -14051,7 +12752,7 @@
     ));
     tape.push(...cmd23_noop());
     tape.push(...cmd16_return());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13236
     ));
@@ -14076,7 +12777,7 @@
     tape.push(...cmd23_noop());
     tape.push(...cmd16_return());
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13236
     ));
@@ -14146,7 +12847,7 @@
       2757
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13244
     ));
@@ -14160,7 +12861,7 @@
       2757
     ));
     tape.push(...cmd17_push_reg16_to_stack());
-    tape.push(...cmd00_write_loaded_param16_to_reg16(
+    tape.push(...cmdl00_write_param16_to_reg16(
       /*param16*/
       13243
     ));
@@ -14194,8 +12895,8 @@
       /*param16*/
       1
     ));
-    tape.push(...cmd07_check_reg16_lt_loaded_param16(
-      /*addr16*/
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
       13243
     ));
     tape.push(...cmd14_bne(
@@ -14206,133 +12907,2198 @@
       /*param16*/
       60
     ));
+    tape.push(...cmdl05_sub_param16_from_reg16(
+      /*param16*/
+      13243
+    ));
+    tape.push(...cmdl06_check_reg16_is_param16(
+      /*param16*/
+      13244
+    ));
+    tape.push(...cmd13_beq(
+      /*addr16*/
+      2919
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      0
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      13244
+    ));
+    tape.push(...cmd18_pop_stack_to_reg16());
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      2757
+    ));
+    tape.push(...cmd18_pop_stack_to_reg16());
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      7801
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      10
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      2949
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      8
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      2634
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      62
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      2948
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      125
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      2633
+    ));
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      2757
+    ));
+    tape.push(...cmdl01_store_reg16_to_tape_addr(
+      /*addr16*/
+      264
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      45058
+    ));
+    tape.push(...cmdl25_bug());
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      12
+    ));
+    tape.push(...cmd18_pop_stack_to_reg16());
+    tape.push(...cmd13_beq(
+      /*addr16*/
+      2757
+    ));
+    tape.push(...cmd18_pop_stack_to_reg16());
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      6
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      2991
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      253
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      1583
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      23
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      2990
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      3
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      1584
+    ));
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      2757
+    ));
+    tape.push(...cmd19_issue_new_frame());
+    tape.push(...cmd20_read_joypad_input_and_set_to_reg16());
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      13229
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      255
+    ));
+    tape.push(...cmdl11_check_reg16_xor_param16(
+      /*param16*/
+      13230
+    ));
+    tape.push(...cmdl09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      13229
+    ));
+    tape.push(...cmd17_push_reg16_to_stack());
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      13229
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      13230
+    ));
+    tape.push(...cmd18_pop_stack_to_reg16());
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      13229
+    ));
+    tape.push(...cmd08_check_reg16_and_param16(
+      /*param16*/
+      1
+    ));
+    tape.push(...cmd13_beq(
+      /*addr16*/
+      3056
+    ));
+    tape.push(...cmd08_check_reg16_and_param16(
+      /*param16*/
+      2
+    ));
+    tape.push(...cmd13_beq(
+      /*addr16*/
+      3062
+    ));
+    tape.push(...cmd08_check_reg16_and_param16(
+      /*param16*/
+      4
+    ));
+    tape.push(...cmd13_beq(
+      /*addr16*/
+      3068
+    ));
+    tape.push(...cmd08_check_reg16_and_param16(
+      /*param16*/
+      8
+    ));
+    tape.push(...cmd13_beq(
+      /*addr16*/
+      3074
+    ));
+    tape.push(...cmd08_check_reg16_and_param16(
+      /*param16*/
+      16
+    ));
+    tape.push(...cmd13_beq(
+      /*addr16*/
+      3080
+    ));
+    tape.push(...cmd08_check_reg16_and_param16(
+      /*param16*/
+      32
+    ));
+    tape.push(...cmd13_beq(
+      /*addr16*/
+      3086
+    ));
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      2992
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      0
+    ));
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      3092
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      2
+    ));
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      3092
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      1
+    ));
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      3092
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      3
+    ));
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      3092
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      4
+    ));
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      3113
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      5
+    ));
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      3113
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      13234
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      13238
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      4
+    ));
+    tape.push(...cmd13_beq(
+      /*addr16*/
+      3107
+    ));
+    tape.push(...cmd05_sub_param16_from_reg16(
+      /*param16*/
+      4
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      13233
+    ));
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      3119
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      13234
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      13233
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      13258
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      13231
+    ));
+    tape.push(...cmdl03_set_loaded_reg16_to_param16(
+      /*param16*/
+      13234
+    ));
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      13231
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      1
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      13231
+    ));
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      3183
+    ));
+    tape.push(...cmd06_check_reg16_is_param16(
+      /*param16*/
+      1
+    ));
+    tape.push(...cmd14_bne(
+      /*addr16*/
+      3153
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      13009
+    ));
+    tape.push(...cmd23_noop());
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      1
+    ));
+    tape.push(...cmd06_check_reg16_is_param16(
+      /*param16*/
+      7
+    ));
+    tape.push(...cmd13_beq(
+      /*addr16*/
+      3187
+    ));
+    tape.push(...cmd06_check_reg16_is_param16(
+      /*param16*/
+      16
+    ));
+    tape.push(...cmd13_beq(
+      /*addr16*/
+      3187
+    ));
+    tape.push(...cmd06_check_reg16_is_param16(
+      /*param16*/
+      25
+    ));
+    tape.push(...cmd13_beq(
+      /*addr16*/
+      3194
+    ));
+    tape.push(...cmd06_check_reg16_is_param16(
+      /*param16*/
+      34
+    ));
+    tape.push(...cmd13_beq(
+      /*addr16*/
+      3194
+    ));
+    tape.push(...cmd06_check_reg16_is_param16(
+      /*param16*/
+      44
+    ));
+    tape.push(...cmd13_beq(
+      /*addr16*/
+      3201
+    ));
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      13233
+    ));
+    tape.push(...cmd16_return());
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      13047
+    ));
+    tape.push(...cmd23_noop());
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      3183
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      13069
+    ));
+    tape.push(...cmd23_noop());
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      3183
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      13124
+    ));
+    tape.push(...cmd23_noop());
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      3208
+    ));
+    tape.push(...cmd19_issue_new_frame());
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      3208
+    ));
+    tape.push(...cmdl11_check_reg16_xor_param16(
+      /*param16*/
+      3077
+    ));
+    tape.push(...cmdl01_store_reg16_to_tape_addr(
+      /*addr16*/
+      3343
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      5120
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      3328
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      3605
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      2305
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      256
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      4
+    ));
+    tape.push(...cmd02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      274
+    ));
+    tape.push(...cmdl03_set_loaded_reg16_to_param16(
+      /*param16*/
+      3599
+    ));
+    tape.push(...cmdl15_stack_preserve_call(
+      /*addr16*/
+      3865
+    ));
+    tape.push(...cmdl10_check_reg16_or_param16(
+      /*param16*/
+      2048
+    ));
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      1302
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      1292
+    ));
+    tape.push(...cmd03_set_loaded_reg16_to_param16(
+      /*param16*/
+      20
+    ));
+    tape.push(...cmdl12_goto(
+      /*addr16*/
+      5391
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      5632
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      3084
+    ));
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      1287
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      3585
+    ));
+    tape.push(...cmd02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      5120
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      5633
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      1292
+    ));
+    tape.push(...cmd02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      3584
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      5138
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      5120
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      3858
+    ));
+    tape.push(...cmdl10_check_reg16_or_param16(
+      /*param16*/
+      2055
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      2068
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      4096
+    ));
+    tape.push(...cmd06_check_reg16_is_param16(
+      /*param16*/
+      2305
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      19
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      2322
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      2311
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      7
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      5135
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      3593
+    ));
+    tape.push(...cmdl03_set_loaded_reg16_to_param16(
+      /*param16*/
+      512
+    ));
+    tape.push(...cmdl10_check_reg16_or_param16(
+      /*param16*/
+      20
+    ));
+    tape.push(...cmdl12_goto(
+      /*addr16*/
+      5391
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      5888
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      4884
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      3585
+    ));
+    tape.push(...cmd02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      4864
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      4878
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      3840
+    ));
+    tape.push(...cmd03_set_loaded_reg16_to_param16(
+      /*param16*/
+      256
+    ));
+    tape.push(...cmd02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      1302
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      5396
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      65285
+    ));
+    tape.push(...cmdl12_goto(
+      /*addr16*/
+      5391
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      4609
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      5641
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      256
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      256
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      4611
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      4883
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      271
+    ));
+    tape.push(...cmd02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      7955
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      1288
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      2312
+    ));
+    tape.push(...cmdl03_set_loaded_reg16_to_param16(
+      /*param16*/
+      3080
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      2055
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      3328
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      3605
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      2305
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      19
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      5903
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      18
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      15
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      1288
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      3854
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      2068
+    ));
+    tape.push(...cmdl15_stack_preserve_call(
+      /*addr16*/
+      1
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      274
+    ));
+    tape.push(...cmd11_check_reg16_xor_param16(
+      /*param16*/
+      3077
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      1806
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      259
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      5633
+    ));
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      14
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      19
+    ));
+    tape.push(...cmdl09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      3860
+    ));
+    tape.push(...cmd08_check_reg16_and_param16(
+      /*param16*/
+      1296
+    ));
+    tape.push(...cmd02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      5120
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      5120
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      5
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      4865
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      287
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      3846
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      4869
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      2304
+    ));
+    tape.push(...cmdl09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      5120
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      5120
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      5
+    ));
+    tape.push(...cmdl11_check_reg16_xor_param16(
+      /*param16*/
+      4869
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      6431
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      4629
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      2326
+    ));
+    tape.push(...cmd06_check_reg16_is_param16(
+      /*param16*/
+      268
+    ));
+    tape.push(...cmdl03_set_loaded_reg16_to_param16(
+      /*param16*/
+      5
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      19
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      769
+    ));
+    tape.push(...cmdl05_sub_param16_from_reg16(
+      /*param16*/
+      4864
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      5141
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      5375
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      5
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      1292
+    ));
+    tape.push(...cmd11_check_reg16_xor_param16(
+      /*param16*/
+      5121
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      18
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      19
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      4613
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      5375
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      5
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      1292
+    ));
+    tape.push(...cmd11_check_reg16_xor_param16(
+      /*param16*/
+      5121
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      18
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      3349
+    ));
+    tape.push(...cmdl09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      256
+    ));
+    tape.push(...cmdl09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      6400
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      21
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      1033
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      2304
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      512
+    ));
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      2819
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      4117
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      2068
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      3328
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      3605
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      2305
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      511
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      1287
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      3092
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      512
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      1285
+    ));
+    tape.push(...cmd13_beq(
+      /*addr16*/
+      5
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      3852
+    ));
+    tape.push(...cmdl11_check_reg16_xor_param16(
+      /*param16*/
+      7955
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      1288
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      783
+    ));
+    tape.push(...cmdl01_store_reg16_to_tape_addr(
+      /*addr16*/
+      4865
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      3599
+    ));
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      12
+    ));
+    tape.push(...cmdl01_store_reg16_to_tape_addr(
+      /*addr16*/
+      3852
+    ));
+    tape.push(...cmdl10_check_reg16_or_param16(
+      /*param16*/
+      4
+    ));
+    tape.push(...cmdl06_check_reg16_is_param16(
+      /*param16*/
+      261
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      1284
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      19
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      25
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      14
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      1288
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      2835
+    ));
+    tape.push(...cmdl12_goto(
+      /*addr16*/
+      6655
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      21
+    ));
+    tape.push(...cmdl09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      276
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      4
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      14
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      1288
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      2317
+    ));
+    tape.push(...cmd02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      5139
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      1551
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      1
+    ));
+    tape.push(...cmdl01_store_reg16_to_tape_addr(
+      /*addr16*/
+      4609
+    ));
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      278
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      3840
+    ));
+    tape.push(...cmd03_set_loaded_reg16_to_param16(
+      /*param16*/
+      3328
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      786
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      3585
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      7955
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      1288
+    ));
+    tape.push(...cmdl12_goto(
+      /*addr16*/
+      3072
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      2831
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      261
+    ));
+    tape.push(...cmdl03_set_loaded_reg16_to_param16(
+      /*param16*/
+      4613
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      3860
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      5378
+    ));
+    tape.push(...cmdl12_goto(
+      /*addr16*/
+      256
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      5145
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      3593
+    ));
+    tape.push(...cmdl03_set_loaded_reg16_to_param16(
+      /*param16*/
+      6400
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      7701
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      5
+    ));
+    tape.push(...cmdl01_store_reg16_to_tape_addr(
+      /*addr16*/
+      4609
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      2329
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      7943
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      1294
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      1551
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      2068
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      3328
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      786
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      3585
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      19
+    ));
+    tape.push(...cmdl09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      3077
+    ));
+    tape.push(...cmd06_check_reg16_is_param16(
+      /*param16*/
+      19
+    ));
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      1304
+    ));
+    tape.push(...cmdl09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      287
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      1300
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      20
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      19
+    ));
+    tape.push(...cmdl09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      5125
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      4117
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      3860
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      2068
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      1280
+    ));
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      5139
+    ));
+    tape.push(...cmdl15_stack_preserve_call(
+      /*addr16*/
+      1
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      271
+    ));
+    tape.push(...cmd02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      3072
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      1025
+    ));
+    tape.push(...cmdl09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      512
+    ));
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      2819
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      1303
+    ));
+    tape.push(...cmdl09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      20
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      15
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      1288
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      4611
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      4883
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      271
+    ));
+    tape.push(...cmd02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      7955
+    ));
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      5888
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      5121
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      4613
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      4
+    ));
+    tape.push(...cmd08_check_reg16_and_param16(
+      /*param16*/
+      5121
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      3072
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      1025
+    ));
+    tape.push(...cmdl09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      4864
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      5141
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      5120
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      279
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      4868
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      3865
+    ));
+    tape.push(...cmdl10_check_reg16_or_param16(
+      /*param16*/
+      18
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      5391
+    ));
+    tape.push(...cmdl09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      65285
+    ));
+    tape.push(...cmdl12_goto(
+      /*addr16*/
+      5391
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      3844
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      5150
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      264
+    ));
+    tape.push(...cmd11_check_reg16_xor_param16(
+      /*param16*/
+      5
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      3854
+    ));
+    tape.push(...cmdl10_check_reg16_or_param16(
+      /*param16*/
+      2055
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      3860
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      5378
+    ));
+    tape.push(...cmdl12_goto(
+      /*addr16*/
+      256
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      256
+    ));
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      65285
+    ));
+    tape.push(...cmdl12_goto(
+      /*addr16*/
+      5391
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      3844
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      5150
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      264
+    ));
+    tape.push(...cmd11_check_reg16_xor_param16(
+      /*param16*/
+      5
+    ));
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      6414
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      2312
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      7
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      15
+    ));
+    tape.push(...cmdl09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      3077
+    ));
+    tape.push(...cmd06_check_reg16_is_param16(
+      /*param16*/
+      6655
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      21
+    ));
+    tape.push(...cmdl09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      3077
+    ));
+    tape.push(...cmd06_check_reg16_is_param16(
+      /*param16*/
+      3840
+    ));
+    tape.push(...cmd03_set_loaded_reg16_to_param16(
+      /*param16*/
+      6
+    ));
+    tape.push(...cmdl11_check_reg16_xor_param16(
+      /*param16*/
+      264
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      6400
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      21
+    ));
+    tape.push(...cmdl11_check_reg16_xor_param16(
+      /*param16*/
+      4613
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      2048
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      1036
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      1806
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      3846
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      4864
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      1293
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      3856
+    ));
+    tape.push(...cmdl01_store_reg16_to_tape_addr(
+      /*addr16*/
+      1291
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      768
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      3585
+    ));
+    tape.push(...cmdl03_set_loaded_reg16_to_param16(
+      /*param16*/
+      65285
+    ));
+    tape.push(...cmdl12_goto(
+      /*addr16*/
+      5391
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      5378
+    ));
+    tape.push(...cmdl12_goto(
+      /*addr16*/
+      256
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      5139
+    ));
+    tape.push(...cmdl10_check_reg16_or_param16(
+      /*param16*/
+      1042
+    ));
+    tape.push(...cmdl12_goto(
+      /*addr16*/
+      3072
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      2831
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      1806
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      6145
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      256
+    ));
+    tape.push(...cmd07_check_reg16_lt_param16(
+      /*param16*/
+      4
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      2817
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      2304
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      5888
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      2068
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      3865
+    ));
+    tape.push(...cmdl10_check_reg16_or_param16(
+      /*param16*/
+      6655
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      21
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      5134
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      18
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      1288
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      4111
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      14
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      3589
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      287
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      268
+    ));
+    tape.push(...cmd09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      1287
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      276
+    ));
+    tape.push(...cmd01_store_reg16_to_tape_addr(
+      /*addr16*/
+      1292
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      5139
+    ));
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      1038
+    ));
+    tape.push(...cmdl09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      256
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      5120
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      5
+    ));
+    tape.push(...cmdl01_store_reg16_to_tape_addr(
+      /*addr16*/
+      3589
+    ));
+    tape.push(...cmd10_check_reg16_or_param16(
+      /*param16*/
+      1298
+    ));
+    tape.push(...cmdl15_stack_preserve_call(
+      /*addr16*/
+      2068
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      5888
+    ));
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      25
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      5141
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      4873
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      1303
+    ));
+    tape.push(...cmdl09_mask_reg16_and_param16_to_reg16(
+      /*param16*/
+      65300
+    ));
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      4864
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      1806
+    ));
+    tape.push(...cmd06_check_reg16_is_param16(
+      /*param16*/
+      5
+    ));
+    tape.push(...cmdl10_check_reg16_or_param16(
+      /*param16*/
+      1299
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      1291
+    ));
+    tape.push(...cmdl12_goto(
+      /*addr16*/
+      3072
+    ));
+    tape.push(...cmdl04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      4869
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      3599
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      2068
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      5120
+    ));
+    tape.push(...cmdl00_write_param16_to_reg16(
+      /*param16*/
+      3074
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      6655
+    ));
+    tape.push(...cmdl07_check_reg16_lt_param16(
+      /*param16*/
+      21
+    ));
+    tape.push(...cmd04_sum_reg16_param16_to_reg16(
+      /*param16*/
+      261
+    ));
+    tape.push(...cmd02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      5888
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      5139
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      3585
+    ));
+    tape.push(...cmd02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      1280
+    ));
+    tape.push(...cmd12_goto(
+      /*addr16*/
+      5129
+    ));
+    tape.push(...cmd00_write_param16_to_reg16(
+      /*param16*/
+      2068
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      5120
+    ));
+    tape.push(...cmdl02_store_loaded_reg16_to_loaded_param16(
+      /*addr16*/
+      5134
+    ));
     tape.push(...data);
     return tape;
   }
 
-  // mountdrag.ts
-  var g_tape = reconstruct_tape();
+  // globals.ts
+  var g = {
+    inp: 0,
+    mq: document.getElementById("marquee"),
+    cond_reg: false,
+    reg16: 0,
+    pc16: 0,
+    sp16: 0,
+    inst8: 0,
+    new_frame: 0,
+    tape: reconstruct_tape(),
+    joyp: {}
+  };
+
+  // web_control.ts
+  var m_connected = false;
+  var m_opt_socket = void 0;
+  var m_opt_data_socket = void 0;
+  var m_tape_snapshot = [...g.tape];
+  var m_do_reset = false;
+  var m_do_diff_tape = false;
+  var m_do_diff_last_tape = false;
+  var m_do_verify_tape = false;
+  var m_do_read = false;
+  var m_do_write = false;
+  var m_addr16_to_access_or_nan = NaN;
+  var m_val_to_write_or_nan = NaN;
+  var m_watching_addresses = [];
+  function connect(server, port, on_message) {
+    const socket = new WebSocket(`ws://${server}:${port}`);
+    socket.addEventListener("open", (_event) => {
+      console.log("web_control: open");
+      m_connected = true;
+    });
+    socket.addEventListener("close", (_event) => {
+      console.log("web_control: close");
+      m_connected = false;
+    });
+    socket.addEventListener("error", (event) => {
+      console.log(`web_control encountered an error: ${event}`);
+    });
+    socket.addEventListener("message", (event) => {
+      on_message(event);
+    });
+    return socket;
+  }
+  function stamp() {
+    return (/* @__PURE__ */ new Date()).toLocaleString(void 0, { hour12: false });
+  }
+  function web_error(msg) {
+    if (!m_opt_socket) throw new Error("socket is not defined");
+    m_opt_socket.send(`${stamp()} - Error - ${msg}`);
+    throw new Error(msg);
+  }
+  function web_warn(msg) {
+    if (!m_opt_socket) throw new Error("socket is not defined");
+    m_opt_socket.send(`${stamp()} - Warn - ${msg}`);
+  }
+  function web_info(msg) {
+    if (!m_opt_socket) throw new Error("socket is not defined");
+    m_opt_socket.send(`${stamp()} - Info - ${msg}`);
+  }
+  function web_trace(msg) {
+    if (!m_opt_data_socket) {
+      web_error("data socket is not connected. Please use /data-connect.");
+      return;
+    }
+    m_opt_data_socket.send(`${stamp()} - Trace - ${msg}`);
+  }
+  function web_send(msg) {
+    if (!m_opt_socket) throw new Error("socket is not defined");
+    m_opt_socket.send(`${msg}`);
+  }
   function verify_tape_integrity() {
     const expected_simple_checksum = 287251;
     const expected_num_elements = 13229;
-    if (g_tape.length != expected_num_elements) {
-      throw new Error(`Expected tape length ${expected_num_elements} but got ${g_tape.length}`);
+    if (g.tape.length != expected_num_elements) {
+      const err = `Expected tape length ${expected_num_elements} but got ${g.tape.length}`;
+      if (m_opt_socket) {
+        web_warn(err);
+      } else {
+        throw new Error(err);
+      }
     }
     var sum = 0;
-    for (var i = 0; i < g_tape.length; i++) {
-      sum += g_tape[i];
+    for (var i = 0; i < g.tape.length; i++) {
+      sum += g.tape[i];
     }
     if (sum != expected_simple_checksum) {
-      throw new Error(`Expected tape sum ${expected_simple_checksum} but got ${sum}`);
+      const err = `Expected tape sum ${expected_simple_checksum} but got ${sum}`;
+      if (m_opt_socket) {
+        web_warn(err);
+        return;
+      } else {
+        throw new Error(err);
+      }
     }
     console.log("tape OK");
+    if (m_opt_socket) {
+      m_opt_socket.send("tape OK");
+    }
   }
+  function addr16(n) {
+    return `0x${n.toString(16).padStart(4, "0")}`;
+  }
+  function display_array_diff(arr1, arr2, name1, name2) {
+    web_send(`${name1}.length: ${arr1.length}, ${name2}.length: ${arr2.length}`);
+    var shared_data_length = arr1.length < arr2.length ? arr1.length : arr2.length;
+    for (var i = 0; i < shared_data_length; i++) {
+      if (arr1[i] != arr2[i]) {
+        web_send(`${addr16(i)}: ${arr1[i]} != ${arr2[i]}`);
+      }
+    }
+    if (arr1.length > arr2.length) {
+      for (var i = shared_data_length; i < arr1.length; i++) {
+        if (arr1[i] != arr2[i]) {
+          web_send(`${addr16(i)}: ${arr1[i]} != NA`);
+        }
+      }
+    } else {
+      for (var i = shared_data_length; i < arr2.length; i++) {
+        web_send(`${addr16(i)}: NA != ${arr2[i]}`);
+      }
+    }
+  }
+  function on_interval() {
+    for (var i = 0; i < m_watching_addresses.length; i++) {
+      const cur_addr16 = m_watching_addresses[i];
+      const opt_value = g.tape[cur_addr16];
+      if (opt_value == void 0) {
+        web_trace(`${addr16(cur_addr16)}: cannot read`);
+      } else {
+        web_trace(`${addr16(cur_addr16)}: ${opt_value}`);
+      }
+    }
+  }
+  function on_update() {
+    if (m_do_reset) {
+      g.inp = 0;
+      g.cond_reg = false;
+      g.reg16 = 0, g.pc16 = 0, g.sp16 = 0, g.inst8 = 0, g.new_frame = 0;
+      g.joyp[37] = 0;
+      g.joyp[38] = 0;
+      g.joyp[39] = 0;
+      g.joyp[40] = 0;
+      g.joyp[88] = 0;
+      g.joyp[90] = 0;
+      g.tape = reconstruct_tape();
+      m_do_reset = false;
+    }
+    if (m_do_diff_tape) {
+      var orig_tape = reconstruct_tape();
+      display_array_diff(orig_tape, g.tape, "orig", "tape");
+      m_tape_snapshot = [...g.tape];
+      m_do_diff_tape = false;
+    }
+    if (m_do_diff_last_tape) {
+      display_array_diff(m_tape_snapshot, g.tape, "snap", "tape");
+      m_tape_snapshot = [...g.tape];
+      m_do_diff_last_tape = false;
+    }
+    if (m_do_verify_tape) {
+      verify_tape_integrity();
+      m_do_verify_tape = false;
+    }
+    if (m_do_read) {
+      if (Number.isNaN(m_addr16_to_access_or_nan)) {
+        web_warn("addr16 is NaN");
+      } else {
+        const opt_value = g.tape[m_addr16_to_access_or_nan];
+        if (opt_value == void 0) {
+          web_warn(
+            `Could not read value at ${addr16(m_addr16_to_access_or_nan)}`
+          );
+        } else {
+          web_send(`Reading ${addr16(m_addr16_to_access_or_nan)}`);
+          web_send(opt_value.toString());
+        }
+      }
+      m_addr16_to_access_or_nan = NaN;
+      m_do_read = false;
+    }
+    if (m_do_write) {
+      if (Number.isNaN(m_addr16_to_access_or_nan)) {
+        web_warn("addr16 is NaN");
+      } else if (Number.isNaN(m_val_to_write_or_nan)) {
+        web_warn("val is NaN");
+      } else {
+        web_send(
+          `Writing ${m_val_to_write_or_nan} to ${addr16(
+            m_addr16_to_access_or_nan
+          )}`
+        );
+        g.tape[m_addr16_to_access_or_nan] = m_val_to_write_or_nan;
+      }
+      m_val_to_write_or_nan = NaN;
+      m_addr16_to_access_or_nan = NaN;
+      m_do_write = false;
+    }
+  }
+  function start() {
+    setInterval(on_interval, 1e3);
+    m_opt_socket = connect("localhost", 3004, (event) => {
+      if (!m_opt_socket) throw new Error("socket is not defined");
+      const message = event.data;
+      if (message.startsWith("/hello")) {
+        m_opt_socket.send("Hello hello!");
+      } else if (message.startsWith("/help")) {
+        m_opt_socket.send("Possible commands are");
+        m_opt_socket.send("/hello                 - Sends a hello");
+        m_opt_socket.send("/help                  - Displays this message");
+        m_opt_socket.send(
+          "/reset                 - Restart your adventure! No refreshing needed!"
+        );
+        m_opt_socket.send(
+          "/diff-tape             - Shows changes on the tape from the original"
+        );
+        m_opt_socket.send(
+          "/diff-last-tape        - Shows changes on the tape since the last snapshot"
+        );
+        m_opt_socket.send(
+          "/verify-tape           - Runs integrity test on the tape"
+        );
+        m_opt_socket.send(
+          "/read {addr16}         - Reads the value in the specified position"
+        );
+        m_opt_socket.send(
+          "/write {addr16} {val}  - Writes a value to the specified position"
+        );
+        m_opt_socket.send(
+          "/watch {addr16}        - Reads the value at the address every second"
+        );
+        m_opt_socket.send(
+          "/nowatch {addr16}      - Stops reading the value at the address every second"
+        );
+        m_opt_socket.send(
+          "/data-connect          - Connect to a side channel websocket server for data transmissions"
+        );
+      } else if (message.startsWith("/reset")) {
+        m_opt_socket.send("Resetting");
+        m_do_reset = true;
+      } else if (message.startsWith("/diff-tape")) {
+        m_do_diff_tape = true;
+      } else if (message.startsWith("/diff-last-tape")) {
+        m_do_diff_last_tape = true;
+      } else if (message.startsWith("/verify-tape")) {
+        m_do_verify_tape = true;
+      } else if (message.startsWith("/read")) {
+        const tokens = message.split(" ");
+        if (tokens.length != 2) {
+          web_warn(`Usage: /read {addr16}`);
+        } else {
+          m_do_read = true;
+          m_addr16_to_access_or_nan = Number(tokens[1]);
+        }
+      } else if (message.startsWith("/write")) {
+        const tokens = message.split(" ");
+        if (tokens.length != 3) {
+          web_warn(`Usage: /write {addr16} {val}`);
+        } else {
+          m_do_write = true;
+          m_addr16_to_access_or_nan = Number(tokens[1]);
+          m_val_to_write_or_nan = Number(tokens[2]);
+        }
+      } else if (message.startsWith("/watch")) {
+        const tokens = message.split(" ");
+        if (tokens.length != 2) {
+          web_warn(`Usage: /watch {addr16}`);
+        } else {
+          m_do_write = true;
+          const addr16_or_nan = Number(tokens[1]);
+          if (Number.isNaN(addr16_or_nan)) {
+            web_warn("address provided is invalid");
+          } else {
+            if (!m_watching_addresses.includes(addr16_or_nan)) {
+              m_watching_addresses.push(addr16_or_nan);
+            }
+          }
+        }
+      } else if (message.startsWith("/nowatch")) {
+        const tokens = message.split(" ");
+        if (tokens.length != 2) {
+          web_warn(`Usage: /nowatch {addr16}`);
+        } else {
+          m_do_write = true;
+          const addr16_or_nan = Number(tokens[1]);
+          if (Number.isNaN(addr16_or_nan)) {
+            web_warn("address provided is invalid");
+          } else {
+            web_info(`Removing address ${addr16(addr16_or_nan)}`);
+            m_watching_addresses = m_watching_addresses.filter(
+              (item) => item !== addr16_or_nan
+            );
+          }
+        }
+      } else if (message.startsWith("/data-connect")) {
+        web_info("Connecting to data channel");
+        m_opt_data_socket = connect("localhost", 3005, (_event) => {
+        });
+        setTimeout(() => {
+          web_trace(`Connected to data channel`);
+        }, 500);
+      }
+    });
+  }
+
+  // mountdrag.ts
   var g_cmds = [
     // 0
     function() {
-      g_reg16 = get_and_adv_tape_u16_and_load_on_odd_caller();
+      g.reg16 = get_and_adv_tape_u16_and_load_on_odd_caller();
     },
     // 1
     function() {
-      g_tape[get_and_adv_tape_u16()] = g_reg16;
+      g.tape[get_and_adv_tape_u16()] = g.reg16;
     },
     // 2
     function() {
-      g_tape[get_and_adv_tape_u16()] = g_tape[g_reg16];
+      g.tape[get_and_adv_tape_u16()] = g.tape[g.reg16];
     },
     // 3
     function() {
-      g_tape[g_reg16] = get_and_adv_tape_u16_and_load_on_odd_caller();
+      g.tape[g.reg16] = get_and_adv_tape_u16_and_load_on_odd_caller();
     },
     // 4
     function() {
-      g_reg16 += get_and_adv_tape_u16_and_load_on_odd_caller();
+      g.reg16 += get_and_adv_tape_u16_and_load_on_odd_caller();
     },
     // 5
     function() {
-      g_reg16 -= get_and_adv_tape_u16_and_load_on_odd_caller();
+      g.reg16 -= get_and_adv_tape_u16_and_load_on_odd_caller();
     },
     // 6
     function() {
-      g_cond_reg = g_reg16 == get_and_adv_tape_u16_and_load_on_odd_caller();
+      g.cond_reg = g.reg16 == get_and_adv_tape_u16_and_load_on_odd_caller();
     },
     // 7
     function() {
-      g_cond_reg = g_reg16 < get_and_adv_tape_u16_and_load_on_odd_caller();
+      g.cond_reg = g.reg16 < get_and_adv_tape_u16_and_load_on_odd_caller();
     },
     // 8
     function() {
-      g_cond_reg = 0 != (g_reg16 & get_and_adv_tape_u16_and_load_on_odd_caller());
+      g.cond_reg = 0 != (g.reg16 & get_and_adv_tape_u16_and_load_on_odd_caller());
     },
     // 9
     function() {
-      g_reg16 = g_reg16 & get_and_adv_tape_u16_and_load_on_odd_caller();
+      g.reg16 = g.reg16 & get_and_adv_tape_u16_and_load_on_odd_caller();
     },
     // 10
     function() {
-      g_reg16 = g_reg16 | get_and_adv_tape_u16_and_load_on_odd_caller();
+      g.reg16 = g.reg16 | get_and_adv_tape_u16_and_load_on_odd_caller();
     },
     // 11
     function() {
-      g_reg16 = g_reg16 ^ get_and_adv_tape_u16_and_load_on_odd_caller();
+      g.reg16 = g.reg16 ^ get_and_adv_tape_u16_and_load_on_odd_caller();
     },
     // 12
     function() {
-      g_pc16 = get_and_adv_tape_u16_and_load_on_odd_caller();
+      g.pc16 = get_and_adv_tape_u16_and_load_on_odd_caller();
     },
     // 13
     function() {
       var v = get_and_adv_tape_u16_and_load_on_odd_caller();
-      g_pc16 = g_cond_reg ? v : g_pc16;
+      g.pc16 = g.cond_reg ? v : g.pc16;
     },
     // 14
     function() {
       var v = get_and_adv_tape_u16_and_load_on_odd_caller();
-      g_pc16 = g_cond_reg ? g_pc16 : v;
+      g.pc16 = g.cond_reg ? g.pc16 : v;
     },
     // 15
     function() {
-      g_sp16 -= 1;
-      g_tape[g_sp16] = g_pc16 + 2;
-      g_pc16 = get_and_adv_tape_u16_and_load_on_odd_caller();
+      g.sp16 -= 1;
+      g.tape[g.sp16] = g.pc16 + 2;
+      g.pc16 = get_and_adv_tape_u16_and_load_on_odd_caller();
     },
     // 16
     function() {
-      g_pc16 = g_tape[g_sp16];
-      g_sp16 += 1;
+      g.pc16 = g.tape[g.sp16];
+      g.sp16 += 1;
     },
     // 17
     function() {
-      g_sp16 -= 1;
-      g_tape[g_sp16] = g_reg16;
+      g.sp16 -= 1;
+      g.tape[g.sp16] = g.reg16;
     },
     // 18
     function() {
-      g_reg16 = g_tape[g_sp16];
-      g_sp16 += 1;
+      g.reg16 = g.tape[g.sp16];
+      g.sp16 += 1;
     },
     // 19
     function() {
-      g_new_frame = 1;
+      g.new_frame = 1;
     },
     // 20
     function() {
-      g_inp = 0;
-      g_inp += g_joyp[37] + (g_joyp[39] << 1) + (g_joyp[38] << 2) + (g_joyp[40] << 3) + (g_joyp[90] << 4) + (g_joyp[88] << 5);
-      g_reg16 = g_inp;
+      g.inp = 0;
+      g.inp += g.joyp[37] + (g.joyp[39] << 1) + (g.joyp[38] << 2) + (g.joyp[40] << 3) + (g.joyp[90] << 4) + (g.joyp[88] << 5);
+      g.reg16 = g.inp;
     },
     // 21
     function() {
-      g_reg16 = (/* @__PURE__ */ new Date())["getSeconds"]();
+      g.reg16 = (/* @__PURE__ */ new Date())["getSeconds"]();
     },
     // 22
     function() {
-      this.document.location.href = "" + l(g_reg16) + ".html";
+      this.document.location.href = "" + l(g.reg16) + ".html";
     }
   ];
   function get_and_adv_tape() {
-    var v = g_tape[g_pc16];
-    g_pc16 += 1;
+    var v = g.tape[g.pc16];
+    g.pc16 += 1;
     return v;
   }
   function get_and_adv_tape_u16() {
@@ -14341,7 +15107,7 @@
   }
   function get_and_adv_tape_u16_and_load_on_odd_caller() {
     var inst16 = get_and_adv_tape_u16();
-    if (g_inst8 % 2 > 0) inst16 = g_tape[inst16] || 0;
+    if (g.inst8 % 2 > 0) inst16 = g.tape[inst16] || 0;
     return inst16;
   }
   function l(v) {
@@ -14349,62 +15115,54 @@
       return "wnesai0123456789X".substring(v2, v2 + 1);
     }
     var y1 = "";
-    while (g_tape[v] != 255) {
-      y1 = y1 + y(g_tape[v]);
+    while (g.tape[v] != 255) {
+      y1 = y1 + y(g.tape[v]);
       v += 1;
     }
     v += 1;
     var y2 = "";
-    while (g_tape[v] != 255) {
-      y2 = y2 + y(g_tape[v]);
+    while (g.tape[v] != 255) {
+      y2 = y2 + y(g.tape[v]);
       v += 1;
     }
     return y1 + y2;
   }
-  var g_joyp = {};
-  g_joyp[37] = 0;
-  g_joyp[38] = 0;
-  g_joyp[39] = 0;
-  g_joyp[40] = 0;
-  g_joyp[88] = 0;
-  g_joyp[90] = 0;
+  g.joyp[37] = 0;
+  g.joyp[38] = 0;
+  g.joyp[39] = 0;
+  g.joyp[40] = 0;
+  g.joyp[88] = 0;
+  g.joyp[90] = 0;
   window.onkeyup = function(e) {
-    g_joyp[e.keyCode] = 0;
+    g.joyp[e.keyCode] = 0;
   };
   window.onkeydown = function(e) {
-    g_joyp[e.keyCode] = 1;
+    g.joyp[e.keyCode] = 1;
   };
-  var g_inp = 0;
-  var g_mq = document.getElementById("marquee");
-  var g_cond_reg = false;
-  var g_reg16 = 0;
-  var g_pc16 = 0;
-  var g_sp16 = 0;
-  var g_inst8 = 0;
-  var g_new_frame = 0;
   verify_tape_integrity();
+  start();
   function mainloop() {
-    g_new_frame = 0;
-    g_inp = 0;
-    var i = 0;
-    while (g_new_frame == 0) {
-      g_inst8 = get_and_adv_tape();
-      var cmd_idx = Math.floor(g_inst8 / 2);
+    g.new_frame = 0;
+    g.inp = 0;
+    while (g.new_frame == 0) {
+      g.inst8 = get_and_adv_tape();
+      var cmd_idx = Math.floor(g.inst8 / 2);
       var fn = g_cmds[cmd_idx];
       if (fn) {
         fn();
       }
     }
-    if (!g_mq) {
+    if (!g.mq) {
       throw new TypeError("Error message");
     }
-    g_mq.innerHTML = " ";
-    g_mq.innerHTML += (g_inp >> 0 & 1) != 0 ? "L" : " ";
-    g_mq.innerHTML += (g_inp >> 1 & 1) != 0 ? "R" : " ";
-    g_mq.innerHTML += (g_inp >> 2 & 1) != 0 ? "F" : " ";
-    g_mq.innerHTML += (g_inp >> 3 & 1) != 0 ? "B" : " ";
-    g_mq.innerHTML += (g_inp >> 4 & 1) != 0 ? "I" : " ";
-    g_mq.innerHTML += (g_inp >> 5 & 1) != 0 ? "U" : " ";
-    g_mq.innerHTML += " ";
+    g.mq.innerHTML = " ";
+    g.mq.innerHTML += (g.inp >> 0 & 1) != 0 ? "L" : " ";
+    g.mq.innerHTML += (g.inp >> 1 & 1) != 0 ? "R" : " ";
+    g.mq.innerHTML += (g.inp >> 2 & 1) != 0 ? "F" : " ";
+    g.mq.innerHTML += (g.inp >> 3 & 1) != 0 ? "B" : " ";
+    g.mq.innerHTML += (g.inp >> 4 & 1) != 0 ? "I" : " ";
+    g.mq.innerHTML += (g.inp >> 5 & 1) != 0 ? "U" : " ";
+    g.mq.innerHTML += " ";
+    on_update();
     requestAnimationFrame(mainloop);
   }
