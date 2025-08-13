@@ -80,6 +80,10 @@ In this case we use a special topic called `topic` to refer to the parent as the
 
 In `examples/` we reproduce code. This is often external tutorial and example code to perform various functions, or errors of some kind. This is somewhat similar to [rs_repro](https://github.com/LanHikari22/rs_repro) except it's more general and not focused on rust.
 
+## Other
+
+Others are like `examples/`, and include `tutorials/`
+
 
 # Contributing
 
