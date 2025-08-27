@@ -24,46 +24,45 @@
 - [Use Cases](#use-cases)
 - [Running Tests](#running-tests)
 - [Contributing](#contributing)
-- [Sponsorship](#sponsorship)
+- [Support](#support)
 - [License](#license)
 - [Credits](#credits)
 
+# Why TODO My tool?
 
-
-## Why TODO My tool?
-
-## Install
+# Install
 
 ```
 pip install TODO my tool
 ```
 
-## Use Cases
+# Use Cases
 
 TODO How do you use the tool?
 
-## Running Tests
+# Running Tests
 
-You can run tests using the `test.sh` script or
+You can run tests using the `test.sh` script, or by running
 
 ```sh
-
 python3 -m unittest
 ```
 
-## Contributing
+# Contributing
 
 All contributions are welcome! I would appreciate feedback on improving the library and optimizing for use cases I haven't thought of yet! 
 Please feel free to contact me by opening an issue ticket or emailing lanhikarixx@gmail.com if you want to chat.
 
-## Sponsorship
+# Support
 
-If this project brings value to you, please consider supporting me with a monthly sponsorship or [buying me a coffee](https://buymeacoffee.com/lan22h)
+If this project brings value to you, please consider supporting me with a monthly subscription or [buying me a coffee](https://buymeacoffee.com/lan22h).
 
-## License
+Your support would greatly help me to create new tools or improve existing ones!
+
+# License
 
 This theme is licensed under the [MIT license](https://opensource.org/licenses/mit-license.php) © 2025 Mohammed Alzakariya.
 
-## Credits
+# Credits
 
 TODO Thank people!
