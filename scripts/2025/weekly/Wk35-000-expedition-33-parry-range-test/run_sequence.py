@@ -15,7 +15,8 @@ INTERVALS_MS = (
     | pipe.OfIter[int].to_list()
 )
 
-KEYS = os.environ["KEYS"].split(",")
+KEY = int(os.environ["KEY"])
+ON_KEYS = os.environ["ON_KEYS"].split(",")
 
 
 def ydotool(*args):
@@ -45,8 +46,8 @@ def listen_on_key_events_pressed(keycodes: List[str], callback: Callable[[], Non
 
 def press_e():
     # E Key
-    ydotool("key", "18:1")
-    ydotool("key", "18:0")
+    ydotool("key", f"{KEY}:1")
+    ydotool("key", f"{KEY}:0")
 
 
 def run():
@@ -57,4 +58,4 @@ def run():
 
 
 if __name__ == "__main__":
-    listen_on_key_events_pressed(KEYS, run)
+    listen_on_key_events_pressed(ON_KEYS, run)
