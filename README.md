@@ -91,8 +91,9 @@ All contributions are welcome!
 
 If there is anything here you would like to be developed further into its own project, or if you have any requests, recommendations, or comments, please let me know by [opening an issue](https://github.com/LanHikari22/rs_repro/issues/new).
 
-Please feel free to contact me by opening an issue ticket or emailing lanhikarixx@gmail.com if you want to chat. Just start the title with "GITCHAT".
+Please feel free to contact me by opening an issue ticket or emailing lanhikarixx@gmail.com if you want to chat.
 
 # License
 
-This project is licensed under the [MIT license](https://opensource.org/licenses/mit-license.php) © 2025 Mohammed Alzakariya.
+This work is licensed under the [MIT license](https://opensource.org/licenses/mit-license.php) © 2025 Mohammed Alzakariya.
+
