@@ -1,0 +1,5 @@
+@use 'variables.scss';
+
+body {
+  color: variables.$primary;
+}
