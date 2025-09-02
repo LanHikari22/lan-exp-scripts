@@ -1,0 +1,5 @@
+kind: wasmer.io/App.v0
+name: wwebdev
+owner: lanhikari22
+package: '.'
+app_id: da_Ko6IotJUOkbG

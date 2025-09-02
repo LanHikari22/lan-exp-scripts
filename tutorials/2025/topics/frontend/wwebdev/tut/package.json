@@ -7,13 +7,13 @@
 	"type": "module",
 	"main": "index.js",
 	"scripts": {
-		"css:scss": "sass --style compressed src/scss:dist",
-		"css:autoprefixer": "postcss -u autoprefixer -r dist/*.css",
+		"css:scss": "sass --style compressed src/scss:public",
+		"css:autoprefixer": "postcss -u autoprefixer -r public/*.css",
 		"css:lint": "stylelint src/scss/*.scss  --custom-syntax postcss-scss",
 		"format": "npx prettier . --check",
 		"biome-check": "npx @biomejs/biome check --write ./src",
 		"build:css": "npm run biome-check && npm run css:lint && npm run css:scss && npm run css:autoprefixer",
-		"build:images": "imagemin src/images/**/* --out-dir=dist/images",
+		"build:images": "imagemin src/images/**/* --out-dir=public/images",
 		"watch:css": "onchange \"src/scss\" -- npm run build:css",
 		"watch:images": "onchange \"src/images\" -- npm run build:images",
 		"build:js": "webpack --mode=production",
@@ -21,7 +21,7 @@
 		"build:html": "posthtml -c posthtml.json",
 		"watch:html": "onchange \"src/views\" -- npm run build:html",
 		"build": "npm run build:*",
-		"serve": "browser-sync start --server \"dist\" --files \"dist\"",
+		"serve": "browser-sync start --server \"public\" --files \"public\"",
 		"watch": "concurrently 'npm run serve' 'npm run watch:*'"
 	},
 	"devDependencies": {
