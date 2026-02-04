@@ -316,7 +316,7 @@ Qed.
 (* exists says There exists some *)
 (* exists! says There exists exactly one *)
 Definition ge (n m : nat) : Prop :=
-  exists p : nat, n = m + p.
+  exists! p : nat, n = m + p.
 
 Definition gt (n m : nat) : Prop :=
 (ge n m) /\ (n = m -> False).
@@ -328,13 +328,29 @@ unfold ge.
 destruct a as [| a'] eqn:Ea.
 {
   exists 0.
-  rewrite -> def_add_clause_0.
-  reflexivity.
+  split.
+  {
+    rewrite -> def_add_clause_0.
+    reflexivity.
+  }
+  {
+    intros p0 H0.
+    rewrite -> def_add_clause_0 in H0.
+    apply H0.
+  }
 }
 {
   exists 0.
-  rewrite -> add_0_r.
-  reflexivity.
+  split.
+  {
+    rewrite -> add_0_r.
+    reflexivity.
+  }
+  {
+    intros p0 H0.
+    apply (add_cancel_2) in H0.
+    apply H0.
+  }
 }
 Qed.
 
@@ -344,16 +360,25 @@ intros a b c H0 H1.
 unfold ge in H0.
 unfold ge in H1.
 unfold ge.
-destruct H0 as [p0 Hp0].
+destruct H0 as [p0 [Hp0 Hp0u]].
 {
-rewrite -> Hp0.
-destruct H1 as [p1 Hp1].
-{
-  rewrite Hp1.
-  exists (p1 + p0).
-  rewrite -> add_assoc.
-  reflexivity.
-}
+  destruct H1 as [p1 [Hp1 Hp1u]].
+  {
+    rewrite -> Hp0.
+    rewrite Hp1.
+    exists (p1 + p0).
+    split.
+    {
+      rewrite -> add_assoc.
+      reflexivity.
+    }
+    {
+      intros x' H2.
+      rewrite <- add_assoc in H2.
+      apply (add_cancel c (p1 + p0) x') in H2.
+      apply H2.
+    }
+  }
 }
 Qed.
 
@@ -380,9 +405,9 @@ Proof.
 intros a b H0 H1.
 unfold ge in H0.
 unfold ge in H1.
-destruct H0 as [p0 Hp0].
+destruct H0 as [p0 [Hp0 Hp0u]].
 {
-  destruct H1 as [p1 Hp1].
+  destruct H1 as [p1 [Hp1 Hp1u]].
   {
     assert (H2: p0 = 0).
     {
@@ -412,19 +437,30 @@ unfold ge.
 split.
 {
   intros H0.
-  destruct H0 as [p0 Hp0].
+  destruct H0 as [p0 [Hp0 Hp0u]].
   {
     rewrite -> Hp0.
     exists p0.
-    rewrite <- (add_assoc b c p0).
-    rewrite -> (add_comm c p0).
-    rewrite -> (add_assoc b p0 c).
-    reflexivity.
+    split.
+    {
+      rewrite <- (add_assoc b c p0).
+      rewrite -> (add_comm c p0).
+      rewrite -> (add_assoc b p0 c).
+      reflexivity.
+    }
+    {
+      intros x' H0.
+      rewrite <- (add_assoc) in H0.
+      rewrite -> (add_comm p0 c) in H0.
+      rewrite -> (add_assoc) in H0.
+      apply add_cancel in H0.
+      apply H0.
+    }
   }
 }
 {
   intros H0.
-  destruct H0 as [p0 Hp0].
+  destruct H0 as [p0 [Hp0 Hp0u]].
   {
     rewrite -> (add_comm b c) in Hp0.
     rewrite -> (add_comm a c) in Hp0.
@@ -432,7 +468,15 @@ split.
     apply add_cancel in Hp0.
     rewrite -> Hp0.
     exists p0.
-    reflexivity.
+    split.
+    {
+      reflexivity.
+    }
+    {
+      intros x' H0.
+      apply add_cancel in H0.
+      apply H0.
+    }
   }
 }
 Qed.
@@ -447,7 +491,7 @@ split.
   intros H0.
   destruct H0 as [H0l H0r].
   {
-    destruct H0l as [p0 Hp0].
+    destruct H0l as [p0 [Hp0 Hp0u]].
     {
       rewrite -> Hp0.
       destruct p0 as [| p0'] eqn:Ep0.
@@ -458,22 +502,41 @@ split.
       }
       {
         exists p0'.
-        rewrite -> add_swap_s.
-        reflexivity.
+        split.
+        {
+          rewrite -> add_swap_s.
+          reflexivity.
+        }
+        {
+          intros x' Hx'.
+          rewrite <- add_swap_s in Hx'.
+          apply add_cancel in Hx'.
+          apply Hx'.
+        }
       }
     }
   }
 }
 {
   intros H0.
-  destruct H0 as [p0 Hp0].
+  destruct H0 as [p0 [Hp0 Hp0u]].
   {
     split.
     {
       exists (S p0).
-      rewrite <- add_swap_s.
-      rewrite -> Hp0.
-      reflexivity.
+      split.
+      {
+        rewrite <- add_swap_s.
+        rewrite -> Hp0.
+        reflexivity.
+      }
+      {
+        intros x' Hx'.
+        rewrite -> Hp0 in Hx'.
+        rewrite -> add_swap_s in Hx'.
+        apply add_cancel in Hx'.
+        apply Hx'.
+      }
     }
     {
       intros H1.
@@ -486,7 +549,7 @@ split.
 Qed.
 
 Proposition gt_pos_shift : forall a b : nat, 
-  (gt b a) <-> exists d : nat, (d = 0 -> False) /\ b = a + d.
+  (gt b a) <-> exists! d : nat, (d = 0 -> False) /\ b = a + d.
 Proof.
   unfold gt.
   unfold ge.
@@ -496,48 +559,65 @@ Proof.
     intros H0.
     destruct H0 as [H0l H0r].
     {
-      destruct H0l as [p0 Hp0].
+      destruct H0l as [p0 [Hp0 Hp0u]].
       {
         exists p0.
         split.
         {
-          intros H1.
-          rewrite -> H1 in Hp0.
-          rewrite -> add_0_r in Hp0.
-          apply H0r.
-          rewrite Hp0.
-          reflexivity.
+          split. (*<- Goal: (p0 = 0 -> False) /\ b = a + p0 *)
+          {
+            intros H1.
+            rewrite -> H1 in Hp0.
+            rewrite -> add_0_r in Hp0.
+            apply H0r.
+            rewrite Hp0.
+            reflexivity.
+          }
+          {
+            rewrite <- Hp0.
+            reflexivity.
+          }
         }
         {
-          rewrite <- Hp0.
-          reflexivity.
+          intros x' Hx'.
+          destruct Hx' as [Hxl Hxr].
+          {
+            rewrite -> Hp0 in Hxr.
+            apply add_cancel in Hxr.
+            apply Hxr.
+          }
         }
       }
     }
   }
   {
     intros H0.
-    destruct H0 as [p0 Hp0].
+    destruct H0 as [p0 [[Hp0l Hp0r] Hp0u]].
     {
-      destruct Hp0 as [Hp0l Hp0r].
+      split. (*<- Goal: (exists ! p : nat, b = a + p) /\ (b = a -> False)*)
       {
+        exists p0.
         split.
         {
-          exists p0.
           rewrite -> Hp0r.
           reflexivity.
         }
         {
-          (* Goal: b = c -> False*)
-          intros H1. (* -> Goal: False*)
-          rewrite -> H1 in Hp0r.
-          apply add_cancel_2 in Hp0r.
-          apply Hp0l.
-          rewrite <- Hp0r.
-          reflexivity.
+          intros x' Hx'.
+          rewrite -> Hp0r in Hx'.
+          apply add_cancel in Hx'.
+          apply Hx'.
         }
       }
-
+      {
+        (* Goal: b = c -> False*)
+        intros H1. (* -> Goal: False*)
+        rewrite -> H1 in Hp0r.
+        apply add_cancel_2 in Hp0r.
+        apply Hp0l.
+        rewrite <- Hp0r.
+        reflexivity.
+      }
     }
   }
 Qed.
@@ -558,9 +638,9 @@ Proof.
   {
     destruct H1 as [H1l H1r].
     {
-      destruct H0l as [p0 Hp0].
+      destruct H0l as [p0 [Hp0 Hp0u]].
       {
-        destruct H1l as [p1 Hp1].
+        destruct H1l as [p1 [Hp1 Hp1u]].
         {
           assert (H2 : p0 = 0 -> False).
           {
@@ -617,7 +697,7 @@ Proof.
   intros H0.
   destruct H0 as [H0l H0r].
   {
-    destruct H0l as [p0 Hp0].
+    destruct H0l as [p0 [Hp0 Hp0u]].
     {
       split.
       {
@@ -627,7 +707,7 @@ Proof.
         intros H1.
         destruct H1 as [H1l H1r].
         {
-          destruct H1l as [p1 Hp1].
+          destruct H1l as [p1 [Hp1 Hp1u]].
           {
             rewrite -> Hp0 in Hp1.
             rewrite <- add_assoc in Hp1.
@@ -688,14 +768,14 @@ Proof.
   intros H0.
   destruct H0 as [H0l H0r].
   {
-    destruct H0l as [p0 Hp0].
+    destruct H0l as [p0 [Hp0 Hp0u]].
     {
       split.
       {
         intros H1.
         destruct H1 as [H1l H1r].
         {
-          destruct H1l as [p1 Hp1].
+          destruct H1l as [p1 [Hp1 Hp1u]].
           {
             rewrite -> Hp0 in Hp1.
             rewrite <- add_assoc in Hp1.
@@ -934,13 +1014,14 @@ Proof.
     {
       split.
       {
+        (* Goal: exists ! p : nat, a * c = b * c + p *)
         destruct c as [| c'].
         {
           contradiction H0l.
           reflexivity.
         }
         {
-          destruct H1l as [p0 Hp0].
+          destruct H1l as [p0 [Hp0 Hp0u]].
           {
             assert (H2 : p0 = 0 -> False).
             {
@@ -954,13 +1035,65 @@ Proof.
             }
             {
               exists ((S c') * (S p0')).
+              split.
+              {
+                (* Goal: a * S c' = b * S c' + S c' * S p0' *)
+                rewrite -> Hp0.
+                rewrite -> mult_dist_over_add_r.
+                rewrite -> (mult_comm (S c') (S p0')).
+                reflexivity.
+              }
+              {
+                intros x' Hx'.
+                (* Goal: S c' * S p0' = x' *)
+                rewrite -> Hp0 in Hx'.
+                rewrite -> mult_dist_over_add_r in Hx'.
+                apply add_cancel in Hx'.
+                rewrite -> mult_comm in Hx'.
+                apply Hx'.
+              }
             }
           }
         }
-
       }
       {
-
+        (* Goal: a * c = b * c -> False *)
+        destruct c as [| c'].
+        {
+          contradiction H0l.
+          reflexivity.
+        }
+        {
+          rewrite -> mult_unfold_r.
+          rewrite -> mult_unfold_r.
+          destruct H1l as [p0 [Hp0 Hp0u]].
+          {
+            rewrite -> Hp0.
+            rewrite <- add_assoc.
+            intros H2.
+            apply add_cancel in H2.
+            rewrite -> mult_dist_over_add_r in H2.
+            rewrite -> add_assoc in H2.
+            rewrite -> (add_comm p0 (b * c')) in H2.
+            symmetry in H2.
+            rewrite <- add_assoc in H2.
+            apply (add_cancel_2 (b * c') (p0 + p0 * c')) in H2.
+            assert (H3 : p0 = 0).
+            {
+              symmetry in H2.
+              apply (zero_sum_zero_parts p0 (p0 * c')) in H2.
+              destruct H2 as [H2l H2r].
+              {
+                apply H2l.
+              }
+            }
+            apply H1r.
+            rewrite -> Hp0.
+            rewrite -> H3.
+            rewrite -> add_0_r.
+            reflexivity.
+          }
+        }
       }
     }
   }
