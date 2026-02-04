@@ -1,0 +1,7 @@
+cfg/
+*.aux
+*.glob
+*.vok
+*.vos
+*.d
+*.sw*
