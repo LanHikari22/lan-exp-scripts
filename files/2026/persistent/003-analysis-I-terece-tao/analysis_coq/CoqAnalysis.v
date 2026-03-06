@@ -1,4 +1,3 @@
-(*\begin{N}*)
 Proposition ax_nat_distinct : forall a b : nat, (S a) = (S b) <-> a = b.
 Proof.
   intros a b.
@@ -600,69 +599,79 @@ Definition ge (n m : nat) : Prop :=
 Definition gt (n m : nat) : Prop :=
 (ge n m) /\ (n = m -> False).
 
-Notation "x >= y" := (ge x y) (at level 70).
-Notation "x > y" := (gt x y) (at level 70).
+Notation "x >= y" := (ge x y) (at level 70) : nat_scope.
+Notation "x > y" := (gt x y) (at level 70) : nat_scope.
 
 
 Proposition ge_refl : forall a : nat, ge a a.
 Proof.
-intros a.
-unfold ge.
-destruct a as [| a'] eqn:Ea.
-{
-  exists 0.
-  split.
+  intros a.
+  unfold ge.
+  destruct a as [| a'] eqn:Ea.
   {
-    rewrite -> def_add_clause_0.
-    reflexivity.
+    exists 0.
+    split.
+    {
+      rewrite -> def_add_clause_0.
+      reflexivity.
+    }
+    {
+      intros p0 H0.
+      rewrite -> def_add_clause_0 in H0.
+      apply H0.
+    }
   }
   {
-    intros p0 H0.
-    rewrite -> def_add_clause_0 in H0.
-    apply H0.
+    exists 0.
+    split.
+    {
+      rewrite -> add_0_r.
+      reflexivity.
+    }
+    {
+      intros p0 H0.
+      apply (add_cancel_2) in H0.
+      apply H0.
+    }
   }
-}
-{
-  exists 0.
-  split.
-  {
-    rewrite -> add_0_r.
-    reflexivity.
-  }
-  {
-    intros p0 H0.
-    apply (add_cancel_2) in H0.
-    apply H0.
-  }
-}
 Qed.
 
 Proposition ge_trans : forall a b c : nat, (ge a b) -> (ge b c) -> (ge a c).
 Proof.
-intros a b c H0 H1.
-unfold ge in H0.
-unfold ge in H1.
-unfold ge.
-destruct H0 as [p0 [Hp0 Hp0u]].
-{
-  destruct H1 as [p1 [Hp1 Hp1u]].
+  intros a b c H0 H1.
+  unfold ge in H0.
+  unfold ge in H1.
+  unfold ge.
+  destruct H0 as [p0 [Hp0 Hp0u]].
   {
-    rewrite -> Hp0.
-    rewrite Hp1.
-    exists (p1 + p0).
-    split.
+    destruct H1 as [p1 [Hp1 Hp1u]].
     {
-      rewrite -> add_assoc.
-      reflexivity.
-    }
-    {
-      intros x' H2.
-      rewrite <- add_assoc in H2.
-      apply (add_cancel c (p1 + p0) x') in H2.
-      apply H2.
+      rewrite -> Hp0.
+      rewrite Hp1.
+      exists (p1 + p0).
+      split.
+      {
+        rewrite -> add_assoc.
+        reflexivity.
+      }
+      {
+        intros x' H2.
+        rewrite <- add_assoc in H2.
+        apply (add_cancel c (p1 + p0) x') in H2.
+        apply H2.
+      }
     }
   }
-}
+Qed.
+
+Proposition nat_add_two_equations : forall a0 a1 a2 a3 b1 b2 : nat,
+  (b1 = a0 + a1) -> (b2 = a2 + a3) -> (b1 + b2 = a0 + a1 + a2 + a3).
+Proof.
+  intros a0 a1 a2 a3 b1 b2 H0 H1.
+  rewrite -> H0.
+  rewrite -> H1.
+  rewrite -> add_assoc.
+  reflexivity.
 Qed.
 
 Proposition gt_as_ge_succ : forall a b : nat, (a > b) <-> (a >= (S b)).
@@ -773,6 +782,101 @@ Proof.
   }
 Qed.
 
+Proposition gt_succ_as_ge : forall a b : nat, ((S a) > b) <-> (a >= b).
+Proof.
+  intros a b.
+  split.
+  {
+    intros H0.
+    destruct b as [| b'].
+    {
+      unfold ge.
+      apply gt_as_ge_succ in H0.
+      exists (a).
+      split.
+      {
+        rewrite -> def_add_clause_0.
+        reflexivity.
+      }
+      {
+        intros x' Hx'.
+        rewrite -> def_add_clause_0 in Hx'.
+        exact Hx'.
+      }
+    }
+    {
+      apply gt_as_ge_succ in H0.
+      apply ge_is_succ_invariant in H0.
+      exact H0.
+    }
+  }
+  {
+    intros H0.
+    apply gt_as_ge_succ.
+    apply -> ge_is_succ_invariant.
+    exact H0.
+  }
+Qed.
+
+Proposition gt_implies_ge : forall a b : nat, (a > b) -> (a >= b).
+Proof.
+  intros a b H0.
+  destruct H0 as [H0l H0r].
+  exact H0l.
+Qed.
+
+Proposition eq_implies_ge : forall a b : nat, (a = b) -> (a >= b).
+Proof.
+  intros a b H0.
+  rewrite -> H0.
+  apply ge_refl.
+Qed.
+
+Proposition gt_trans : forall a b c : nat, (gt a b) -> (gt b c) -> (gt a c).
+Proof.
+  intros a b c H0 H1.
+  unfold gt.
+  split.
+  2:
+  {
+    destruct H0 as [H0l H0r].
+    destruct H1 as [H1l H1r].
+    destruct H0l as [p0 [Hp0 _]].
+    destruct H1l as [p1 [Hp1 _]].
+    specialize (nat_add_two_equations b p0 c p1 a b Hp0 Hp1) as H0.
+    rewrite -> add_comm in H0.
+    do 2 rewrite <- add_assoc in H0.
+    apply -> add_cancel in H0.
+    destruct p0 as [| p0'].
+    {
+      rewrite -> add_0_r in Hp0.
+      specialize (H0r Hp0).
+      contradiction.
+    }
+    {
+      destruct p1 as [| p1'].
+      {
+        rewrite -> add_0_r in Hp1.
+        specialize (H1r Hp1).
+        contradiction.
+      }
+      {
+        rewrite -> add_comm in H0.
+        rewrite <- add_assoc in H0.
+        rewrite -> def_add_clause_1 in H0.
+        rewrite <- add_swap_s in H0.
+        specialize (add_succ_implies_ne_3 a c (p1' + (S p0')) H0) as H1.
+        exact H1.
+      }
+    }
+  }
+  {
+    apply gt_implies_ge in H0, H1.
+    specialize (ge_trans a b c H0 H1) as H2.
+    exact H2.
+  }
+Qed.
+
 Proposition ge_is_add_invariant : forall a b c : nat, (a >= b) <-> ((a + c) >= (b + c)).
 Proof.
 intros a b c.
@@ -822,6 +926,129 @@ split.
     }
   }
 }
+Qed.
+
+Proposition gt_is_add_invariant : forall a b c : nat, (a > b) <-> ((a + c) > (b + c)).
+Proof.
+  intros a b c.
+  split.
+  {
+    intros H0.
+    split.
+    {
+      apply gt_implies_ge in H0.
+      apply ge_is_add_invariant.
+      exact H0.
+    }
+    {
+      intros H1.
+      destruct H0 as [H0l H0r].
+      rewrite -> (add_comm a c) in H1.
+      rewrite -> (add_comm b c) in H1.
+      specialize (add_cancel c a b) as H2.
+      destruct H2 as [H2 _].
+      specialize (H2 H1).
+      specialize (H0r H2).
+      contradiction.
+    }
+  }
+  {
+    intros H0.
+    split.
+    2:
+    {
+      destruct H0 as [H0l H0r].
+      rewrite -> (add_comm a c) in H0r.
+      rewrite -> (add_comm b c) in H0r.
+      specialize (add_cancel c a b) as H1.
+      destruct H1 as [_ H1].
+      intros H2.
+      specialize (H1 H2).
+      specialize (H0r H1).
+      contradiction.
+    }
+    {
+      apply gt_implies_ge in H0.
+      apply <- (ge_is_add_invariant a b c).
+      exact H0.
+    }
+  }
+Qed.
+
+Proposition gt_0_l_is_false : forall a : nat, 0 > a -> False.
+Proof.
+  intros a H0.
+  destruct H0 as [H0l H0r].
+  induction a as [| a' IHa'].
+  {
+    contradiction.
+  }
+  {
+    apply gt_as_ge_succ in H0l.
+    destruct H0l as [H0ll H0lr].
+    specialize (IHa' H0ll H0lr) as H1.
+    contradiction.
+  }
+Qed.
+
+Proposition gt_succ_l_0_r : forall a : nat, (S a) > 0.
+Proof.
+  intros a.
+  apply gt_as_ge_succ.
+  unfold ge.
+  exists (a).
+  split.
+  {
+    rewrite <- add_1_is_succ.
+    reflexivity.
+  }
+  {
+    intros x' Hx'.
+    rewrite -> (add_1_is_succ x') in Hx'.
+    injection Hx' as Hx'.
+    exact Hx'.
+  }
+Qed.
+
+Proposition ge_implies_eq_or_gt : forall a b : nat, (a >= b) -> ((a = b) \/ (a > b)).
+Proof.
+  intros a b H0.
+  destruct H0 as [p0 [Hp0 Hp0u]].
+  destruct p0 as [| p0'].
+  {
+    rewrite -> add_0_r in Hp0.
+    left.
+    apply Hp0.
+  }
+  {
+    right.
+    apply gt_as_ge_succ.
+    unfold ge.
+    rewrite <- add_swap_s in Hp0.
+    exists (p0').
+    split.
+    {
+      exact Hp0.
+    }
+    {
+      intros x' Hx'.
+      rewrite -> Hp0 in Hx'.
+      apply add_cancel in Hx'.
+      exact Hx'.
+    }
+  }
+Qed.
+
+
+Proposition ge_a_ge_b_b_ge_Sa_is_false : forall (a b : nat), (a >= b) -> (b >= S a) -> False.
+Proof.
+  intros a b H0 H1.
+  destruct H0 as [p0 [Hp0 _]].
+  destruct H1 as [p1 [Hp1 _]].
+  rewrite -> Hp1 in Hp0.
+  rewrite <- add_assoc in Hp0.
+  specialize (add_succ_implies_ne_2 a (p1 + p0) Hp0) as H1.
+  contradiction.
 Qed.
 
 Proposition add_neutral_r : forall a b : nat, a + b = a -> b = 0.
@@ -1220,6 +1447,89 @@ Proof.
   }
 Qed.
 
+Proposition nat_eq_dichotomy : forall (a b : nat), 
+  (a = b) \/ ((a = b) -> False).
+Proof.
+  intros a b.
+  destruct (nat_ord_trichotomy_3 a b) as [Heq | [Hgt | Hlt]].
+  {
+    left.
+    exact Heq.
+  }
+  {
+    unfold gt in Hgt.
+    destruct Hgt as [Hge Hnzab].
+    right.
+    exact Hnzab.
+  }
+  {
+    unfold gt in Hlt.
+    destruct Hlt as [Hle Hnzba].
+    right.
+    intros H0.
+    symmetry in H0.
+    specialize (Hnzba H0).
+    contradiction.
+  }
+Qed.
+
+Proposition nat_ord_trichotomy_0_ne : forall a b : nat, 
+  ((gt a b) -> False) -> ((a = b)) \/ ((gt b a)).
+Proof.
+  intros a b H0.
+  destruct (nat_ord_trichotomy_3 a b) as [Heq | [Hgt | Hlt]].
+  {
+    left.
+    exact Heq.
+  }
+  {
+    specialize (H0 Hgt).
+    contradiction.
+  }
+  {
+    right.
+    exact Hlt.
+  }
+Qed.
+
+Proposition nat_ord_trichotomy_1_ne : forall a b : nat, 
+   ((a = b) -> False) -> ((gt a b)) \/ ((gt b a)).
+Proof.
+  intros a b H0.
+  destruct (nat_ord_trichotomy_3 a b) as [Heq | [Hgt | Hlt]].
+  {
+    specialize (H0 Heq).
+    contradiction.
+  }
+  {
+    left.
+    exact Hgt.
+  }
+  {
+    right.
+    exact Hlt.
+  }
+Qed.
+
+Proposition nat_ord_trichotomy_2_ne : forall a b : nat, 
+  ((gt b a) -> False) -> (gt a b) \/ (a = b).
+Proof.
+  intros a b H0.
+  destruct (nat_ord_trichotomy_3 a b) as [Heq | [Hgt | Hlt]].
+  {
+    right.
+    exact Heq.
+  }
+  {
+    left.
+    exact Hgt.
+  }
+  {
+    specialize (H0 Hlt).
+    contradiction.
+  }
+Qed.
+
 Proposition def_mult_clause_0 : forall a : nat, 0 * a = 0.
 Proof.
   intros a.
@@ -1341,6 +1651,19 @@ Proof.
   rewrite -> (mult_comm a c).
   rewrite -> (mult_comm b c).
   apply mult_dist_over_add.
+Qed.
+
+Proposition mult_dist_add_over_add : forall (a b c d : nat),
+  ((a + b) * (c + d) = a*c + a*d + b*c + b*d)%nat.
+Proof.
+  intros a b c d.
+  rewrite -> mult_dist_over_add.
+  do 2 rewrite -> mult_dist_over_add_r.
+  repeat rewrite <- add_assoc.
+  apply <- add_cancel.
+  repeat rewrite -> add_assoc.
+  apply <- add_cancel_r.
+  apply add_comm.
 Qed.
 
 Proposition mult_assoc : forall a b c : nat,
@@ -1604,6 +1927,129 @@ Fixpoint exp (a b : nat) : nat :=
 
 Notation "x ** y" := (exp x y) (at level 45).
 
+(*\begin{nat extra}*)
+
+Proposition nat_euclid_div : forall (a b : nat), exists (k l : nat), 
+  ((S b) > l)%nat /\ (a = k * (S b) + l)%nat.
+Proof.
+  intros a b.
+  generalize dependent b.
+  induction a as [| a' IHa'].
+  {
+    intros b.
+    exists (0).
+    exists (0).
+    split.
+    {
+      apply gt_succ_l_0_r.
+    }
+    {
+      rewrite -> add_0_r.
+      rewrite -> def_mult_clause_0.
+      reflexivity.
+    }
+  }
+  {
+    intros b.
+    specialize (IHa' b) as H0.
+    destruct H0 as [k' [l' [HgtSbl Hdiv]]].
+    (*
+      S a' < S b
+      a'  := 4
+      S b := 6
+
+      a'   = k' * S b + l' <-> 4 = k' * 6 + l' <-> 4 = 0 * 6 + 4.
+      S a' = k  * S b + l  <-> 5 = k  * 6 + l  <-> 5 = 0 * 6 + 5
+
+      S a' = S b
+      a'  := 5
+      S b := 6
+
+      a'   = k' * S b + l' <-> 5 = k' * 6 + l' <-> 5 = 0 * 6 + 5.
+      S a' = k  * S b + l  <-> 6 = k  * 6 + l  <-> 6 = 1 * 6 + 0.
+
+      S a' > S b
+      a'  := 25
+      S b := 13
+
+      a'   = k' * S b + l' <-> 25 = k' * 13 + l' <-> 25 = 1 * 13 + 12.
+      S a' = k  * S b + l  <-> 26 = k  * 13 + l  <-> 26 = 2 * 13 + 0.
+    *)
+    destruct (nat_eq_dichotomy (l' + 1) (S b)) as [Heq | Hne].
+    {
+      exists (k' + 1)%nat.
+      exists (0).
+      split.
+      {
+        apply gt_succ_l_0_r.
+      }
+      {
+        rewrite -> add_0_r.
+        rewrite -> mult_dist_over_add_r.
+        rewrite -> mult_ident.
+        assert (Hrw : ((S a' = k' * S b + (l' + 1)) -> (S a' = k' * S b + S b))%nat).
+        {
+          intros H0.
+          rewrite -> Heq in H0.
+          exact H0.
+        }
+        apply Hrw.
+        clear Hrw.
+        rewrite -> add_assoc.
+        rewrite -> Hdiv.
+        rewrite <- add_1_is_succ.
+        rewrite -> add_comm.
+        reflexivity.
+      }
+    }
+    {
+      exists (k').
+      exists (l' + 1)%nat.
+      split.
+      {
+        apply (nat_ord_trichotomy_1_ne) in Hne.
+        destruct Hne as [Hlt | Hgt].
+        {
+          rewrite -> add_comm in Hlt.
+          rewrite -> add_1_is_succ in Hlt.
+          apply -> gt_succ_as_ge in Hlt.
+          apply -> gt_succ_as_ge in HgtSbl.
+          specialize (ge_a_ge_b_b_ge_Sa_is_false b l' HgtSbl Hlt) as H1.
+          contradiction.
+        }
+        {
+          exact Hgt.
+        }
+      }
+      {
+        rewrite <- (add_1_is_succ a').
+        rewrite -> Hdiv.
+        rewrite -> add_comm.
+        rewrite -> add_assoc.
+        reflexivity.
+      }
+    }
+  }
+Qed.
+
+
+Proposition gt_same_is_false : forall (a : nat), (a > a) -> False.
+Proof.
+  intros a H0.
+  destruct a as [| a'].
+  {
+    apply gt_0_l_is_false in H0.
+    contradiction.
+  }
+  {
+    apply gt_succ_as_ge in H0.
+    destruct H0 as [p0 [Hp0 _]].
+    apply add_succ_implies_ne_2 in Hp0.
+    contradiction.
+  }
+Qed.
+
+(*\end{nat extra}*)
 
 (*\end{N}*)
 
@@ -3134,6 +3580,16 @@ Proof.
   reflexivity.
 Qed.
 
+Proposition z_neg_extract_from_sub_neg_l : forall a b : nat, 
+  ((-- NZ#a) - (NZ#b)) ~= (-- (NZ# a + b)).
+Proof.
+  intros a b.
+  unfold z_neg.
+  unfold z_eq.
+  simpl.
+  reflexivity.
+Qed.
+
 Proposition z_neg_mov_rhs_to_lhs : forall a b : Z, (a ~= -- b)%Z <-> (a + b ~= (NZ#0)).
 Proof.
   intros a b.
@@ -3250,6 +3706,7 @@ Proof.
   }
 Qed.
 
+(* TODO
 Proposition z_mult_rem_unsigned_must_be_non_pos_1 : forall (a : Z) (b c : nat), 
   (a * (NZ#b) ~= (-- NZ#c))%Z -> exists ! k : nat, a ~= (-- NZ#k).
 Proof.
@@ -3291,6 +3748,7 @@ Proof.
   }
 
 Qed.
+*)
 
 Proposition z_mult_rhs_neg_part_neg : forall (a : Z) (b c : nat), 
   (a * (NZ#S(b)) ~= (-- (NZ#S(c))))%Z -> exists ! k : nat, a ~= (-- (NZ#S(k))).
@@ -4990,6 +5448,16 @@ Proof.
   reflexivity.
 Qed.
 
+Proposition z_nz_reduce_add : forall a b : nat,
+  ((NZ#a) + (NZ#b) ~= (NZ# a + b))%Z.
+Proof.
+  intros a b.
+  unfold NZ, z_add, z_eq.
+  simpl.
+  rewrite -> add_0_r.
+  reflexivity.
+Qed.
+
 Proposition z_nz_mult_reduce_proj1_sig : forall 
   (a b : Z) (Ha : ((a ~= (NZ#0))%Z -> False)) (Hb : ((b ~= (NZ#0))%Z -> False)), 
   (proj1_sig (
@@ -5112,6 +5580,54 @@ Proof.
   }
 Qed.
 
+Proposition z_mult_preserves_ne_z_3 : forall a b : nat,
+  (((NZ#a) ~= (NZ#0))%Z -> False) /\ (((NZ#b) ~= (NZ#0))%Z -> False)
+  <-> (((NZ#a) * (NZ#b) ~= (NZ#0))%Z -> False).
+Proof.
+  intros a b.
+  split.
+  {
+    intros [H0 H1] H2.
+    destruct a as [| a'].
+    {
+      apply H0.
+      reflexivity.
+    }
+    {
+      destruct b as [| b'].
+      {
+        apply H1.
+        reflexivity.
+      }
+      {
+        rewrite -> z_mult_reduce_pos_pos in H2.
+        discriminate.
+      }
+    }
+  }
+  {
+    intros H0.
+    split.
+    {
+      intros H1.
+      apply H0. (* suffice to show this *)
+      rewrite -> z_nz_inject in H1.
+      rewrite -> H1.
+      rewrite -> z_mult_reduce_non_neg.
+      rewrite -> def_mult_clause_0.
+      reflexivity.
+    }
+    {
+      intros H1.
+      apply H0.
+      rewrite -> z_nz_inject in H1.
+      rewrite -> H1.
+      rewrite -> z_mult_reduce_non_neg.
+      rewrite -> mult_0_r.
+      reflexivity.
+    }
+  }
+Qed.
 
 Proposition z_mult_preserves_ne_z_succ : forall a b : nat,
   ((NZ#(S (b +  a * S b)) ~= (NZ#0))%Z -> False).
@@ -5191,6 +5707,103 @@ Proof.
   rewrite <- z_neg_extract_from_mult_l.
   reflexivity.
 Qed.
+
+Proposition z_normal_form_sign_dichotomy : forall (z : Z), exists (a : nat),
+  (z ~= (NZ#a))%Z \/ (z ~= (-- (NZ#a)))%Z.
+Proof.
+  intros [a b].
+  destruct (nat_ord_trichotomy_3 a b) as [Heq | [Hgt | Hlt]].
+  {
+    exists (0).
+    left. (* don't care *)
+    rewrite -> Heq.
+    rewrite -> z_same_parts_eqv_0.
+    reflexivity.
+  }
+  {
+    apply gt_as_ge_succ in Hgt.
+    destruct Hgt as [p0 [Hp0 _]].
+    rewrite -> add_swap_s in Hp0.
+    exists (S p0).
+    left.
+    rewrite -> Hp0.
+    rewrite -> z_reduce_shared_part_pos.
+    reflexivity.
+  }
+  {
+    apply gt_as_ge_succ in Hlt.
+    destruct Hlt as [p0 [Hp0 _]].
+    rewrite -> add_swap_s in Hp0.
+    exists (S p0).
+    right.
+    rewrite -> Hp0.
+    rewrite -> z_reduce_shared_part_neg.
+    reflexivity.
+  }
+Qed.
+
+Proposition z_sign_preserves_nz : forall (a : nat),
+  (((NZ#a) ~= (NZ#0))%Z -> False) <-> (((-- (NZ#a)) ~= (NZ#0))%Z -> False).
+Proof.
+  intros a.
+  split.
+  {
+    intros H0 H1.
+    unfold z_neg in H1.
+    unfold z_eq in H1.
+    simpl in H1.
+    destruct a as [| a'].
+    {
+      apply H0.
+      reflexivity.
+    }
+    {
+      discriminate.
+    }
+  }
+  {
+    intros H0 H1.
+    destruct a as [| a'].
+    {
+      rewrite -> z_neg_reduce_neg_0 in H0.
+      apply H0.
+      reflexivity.
+    }
+    {
+      discriminate.
+    }
+  }
+Qed.
+
+Proposition z_normal_form_preserves_nz_pos : forall (z : Z) (a : nat),
+  (z ~= (NZ#a))%Z -> ((z ~= (NZ#0))%Z -> False)
+  -> (((NZ#a) ~= (NZ#0))%Z -> False).
+Proof.
+  intros z a H0 H1 H2.
+  rewrite -> H0 in H1.
+  specialize (H1 H2).
+  contradiction.
+Qed.
+
+Proposition z_normal_form_preserves_nz_neg : forall (z : Z) (a : nat),
+  (z ~= (-- (NZ#a)))%Z -> ((z ~= (NZ#0))%Z -> False)
+  -> (((NZ#a) ~= (NZ#0))%Z -> False).
+Proof.
+  intros z a H0 H1 H2.
+  rewrite -> H0 in H1.
+  specialize (z_sign_preserves_nz a) as H3.
+  destruct H3 as [_ H3].
+  specialize (H3 H1 H2).
+  contradiction.
+Qed.
+
+Proposition z_pos_ne_0 : forall (a : nat), ((NZ#(S a)) ~= (NZ#0))%Z -> False.
+Proof.
+  intros a H0.
+  apply -> z_nz_inject in H0.
+  discriminate.
+Qed.
+
 
 (*\end{Z extra}*)
 
@@ -5542,6 +6155,17 @@ Proof.
   reflexivity.
 Qed.
 
+Proposition q_nq_1_is_same_num_den : forall (a : nat) (Hnza : ((NZ#a) ~= (NZ#0))%Z -> False), 
+  ((NQ#1) ~= {| num := (NZ#a); den := (Z_nz_ex (NZ#a) Hnza) |})%Q.
+Proof.
+  intros a Hnza.
+  unfold q_eq.
+  simpl.
+  rewrite -> z_mult_ident_l.
+  rewrite -> z_mult_ident_r.
+  reflexivity.
+Qed.
+
 Proposition q_num_0_is_eqv_0 : forall (a : Z) (b : Z_nz), 
   ((a /Q b) ~= (NQ#0))%Q <-> (a ~= (NZ# 0))%Z.
 Proof.
@@ -5573,6 +6197,17 @@ Proof.
   }
 Qed.
 
+Proposition q_num_0_is_eqv_0_1 : forall (b : Z_nz), 
+  ({| num := (NZ#0); den := b |} ~= (NQ#0))%Q.
+Proof.
+  intros [b Hnzb].
+  unfold q_eq.
+  simpl.
+  do 2 rewrite -> z_mult_0_l.
+  reflexivity.
+Qed.
+
+
 Definition Q_nz := { a : Q | ((num a) ~= (NZ#0))%Z -> False }.
 
 Declare Scope Q_nz_scope.
@@ -5602,6 +6237,12 @@ Definition q_nz_recip (a : Q_nz) : Q_nz :=
   ).
 
 Notation "x **-1" := (q_nz_recip x) (at level 45) : Q_nz_scope.
+
+Definition q_recip (a : Q) (Hnza : ((num a) ~= (NZ#0))%Z -> False) : Q :=
+  {|
+    num := (proj1_sig (den a));
+    den := (Z_nz_ex (num a) Hnza)
+  |}.
 
 Definition ZQ_nz (a : Z_nz) : Q_nz :=
   (q_nz_from_q
@@ -5637,6 +6278,7 @@ Proof.
 Defined.
 
 Notation "x * y" := (q_nz_mult x y) (at level 40, left associativity) : Q_nz_scope.
+
 
 (*\begin{Q is a field}*)
 
@@ -5783,6 +6425,24 @@ Proof.
   apply q_mult_ident_l.
 Qed.
 
+Proposition q_mult_0_l : forall a : Q, (NQ#0) * a ~= (NQ#0).
+Proof.
+  intros [a [b Hnzb]].
+  unfold q_mult, q_eq; simpl.
+  do 2 rewrite -> z_mult_0_l.
+  reflexivity.
+Qed.
+
+Proposition q_mult_0_r : forall a : Q, a * (NQ#0) ~= (NQ#0).
+Proof.
+  intros [a [b Hnzb]].
+  unfold q_mult, q_eq; simpl.
+  rewrite -> z_mult_0_l.
+  rewrite -> z_mult_0_r.
+  rewrite -> z_mult_0_l.
+  reflexivity.
+Qed.
+
 Proposition q_mult_dist_over_add_l : forall a b c : Q, a * (b + c) ~= (a * b) + (a * c).
 Proof.
   intros [a [b Hnzb]] [c [d Hnzd]] [e [f Hnzf]].
@@ -5869,6 +6529,55 @@ Proof.
   rewrite -> z_mult_ident_l.
   rewrite -> z_nz_mult_reduce_proj1_sig.
   rewrite -> z_mult_comm.
+  reflexivity.
+Qed.
+
+Proposition q_norm_multiplicative_inverse : forall (a b : nat) 
+  (Hnza : ((NZ#a) ~= (NZ#0))%Z -> False) (Hnzb : ((NZ#b) ~= (NZ#0))%Z -> False),
+  ({| num := (NZ#a); den := (Z_nz_ex (NZ#b) Hnzb) |} *
+   {| num := (NZ#b); den := (Z_nz_ex (NZ#a) Hnza) |} ~= (NQ#1))%Q.
+Proof.
+  intros a b Hnza Hnzb.
+  unfold q_eq, q_mult; simpl.
+  rewrite -> z_mult_ident_r.
+  rewrite -> z_mult_ident_l.
+  rewrite -> z_mult_comm.
+  reflexivity.
+Qed.
+
+Proposition q_nq_multiplicative_inverse_l : forall (a : nat) 
+  (Hnza : ((NZ#a) ~= (NZ#0))%Z -> False),
+  ((NQ#a) * {| num := (NZ#1); den := (Z_nz_ex (NZ#a) Hnza) |} ~= (NQ#1))%Q.
+Proof.
+  intros a Hnza.
+  unfold q_eq, q_mult; simpl.
+  do 2 rewrite -> z_mult_ident_r.
+  do 2 rewrite -> z_mult_ident_l.
+  reflexivity.
+Qed.
+
+Proposition q_nq_multiplicative_inverse_r : forall (a : nat) 
+  (Hnza : ((NZ#a) ~= (NZ#0))%Z -> False),
+  ({| num := (NZ#1); den := (Z_nz_ex (NZ#a) Hnza) |} * (NQ#a) ~= (NQ#1))%Q.
+Proof.
+  intros a Hnza.
+  unfold q_eq, q_mult; simpl.
+  do 2 rewrite -> z_mult_ident_r.
+  rewrite -> z_mult_ident_l.
+  reflexivity.
+Qed.
+
+Proposition q_double_is_same_add : forall (a : Q),
+  a * (NQ#2) ~= a + a.
+Proof.
+  intros [a [b Hnzb]].
+  assert (Hrw : (NQ#2) ~= (NQ#1) + (NQ#1)).
+  {
+    easy.
+  }
+  rewrite -> Hrw.
+  rewrite -> q_mult_dist_over_add_l.
+  rewrite -> q_mult_ident_r.
   reflexivity.
 Qed.
 
@@ -6307,7 +7016,7 @@ Proof.
   }
 Qed.
 
-(*\begin{Q extra prev}*)
+(*\begin{Q extra 0}*)
 
 Proposition q_mov_neg_r_to_rhs : forall a b c : Q, (a - b ~= c) <-> (a ~= c + b).
 Proof.
@@ -6359,6 +7068,7 @@ Proof.
   reflexivity.
 Qed.
 
+
 Proposition q_neg_both_sides : forall a b : Q, (a ~= b) <-> ((-- a) ~= (-- b)).
 Proof.
   intros [a [b Hnzb]] [c [d Hnzd]].
@@ -6404,9 +7114,19 @@ Proof.
   reflexivity.
 Qed.
 
+
 Proposition q_neg_reduce_neg_z : (-- (NQ# 0)) = (NQ# 0).
 Proof.
   easy.
+Qed.
+
+Proposition q_reduce_sub_0 : forall a : Q, (a - (NQ#0) ~= a)%Q.
+Proof.
+  intros a.
+  unfold q_sub.
+  rewrite -> q_neg_reduce_neg_z.
+  rewrite -> q_add_0_r.
+  reflexivity.
 Qed.
 
 Proposition q_neg_sub_is_rev : forall a b : Q, (-- (a - b)) ~= (b - a).
@@ -6633,6 +7353,30 @@ Proof.
   }
 Qed.
 
+Proposition q_nq_reduce_add : forall a b : nat,
+  (NQ#a) + (NQ#b) ~= (NQ# a + b).
+Proof.
+  intros a b.
+  unfold q_add, q_eq.
+  simpl.
+  do 2 rewrite -> z_mult_ident_l.
+  do 3 rewrite -> z_mult_ident_r.
+  rewrite -> z_nz_reduce_add.
+  reflexivity.
+Qed.
+
+Proposition q_nq_reduce_sub : forall a b : nat,
+  ((NQ#a) - (NQ#b) ~= (ZQ# ((NZ#a) - (NZ#b))%Z))%Q.
+Proof.
+  intros a b.
+  unfold q_sub, q_neg, q_add, q_eq.
+  simpl.
+  do 3 rewrite -> z_mult_ident_r.
+  rewrite -> z_mult_ident_l.
+  rewrite -> z_sub_refold.
+  reflexivity.
+Qed.
+
 Proposition q_div_reduce_sub_formal : forall (a b c d : Z)
   (Hnzb : (b ~= (NZ#0))%Z -> False) (Hnzd : (d ~= (NZ#0))%Z -> False)
   (Hnzbd : (b*d ~= (NZ#0))%Z -> False),
@@ -6664,6 +7408,16 @@ Proof.
   rewrite -> z_sub_refold.
   rewrite -> z_mult_assoc.
   reflexivity.
+Qed.
+
+Proposition q_div_reduce_sub_formal_same_den_2 : forall (a b c : nat)
+  (Hnzb : ((NZ#b) ~= (NZ#0))%Z -> False),
+  {| num := (NZ#a); den := (Z_nz_ex (NZ#b) Hnzb) |} - 
+  {| num := (NZ#c); den := (Z_nz_ex (NZ#b) Hnzb) |}
+  ~= {| num := (NZ#a) - (NZ#c); den := (Z_nz_ex (NZ#b) Hnzb) |}.
+Proof.
+  intros a b c.
+  apply q_div_reduce_sub_formal_same_den.
 Qed.
 
 Proposition q_div_reduce_sub_formal_partial_shared_den_r : forall (a b c d e : Z)
@@ -6750,6 +7504,67 @@ Proof.
   repeat rewrite <- z_mult_assoc.
   repeat rewrite <- z_add_assoc.
   reflexivity.
+Qed.
+
+Proposition q_add_cancel_l : forall (a b c: Q), (a + b ~= a + c) <-> (b ~= c).
+Proof.
+  intros [a [b Hnzb]] [c [d Hnzd]] [e [f Hnzf]].
+  split.
+  {
+    intros H0.
+    unfold q_add in *.
+    unfold q_eq in *.
+    simpl in *.
+    do 2 rewrite -> z_mult_dist_over_add_r in H0.
+    do 4 rewrite <- z_mult_assoc in H0.
+    assert (Hrw : (a * d * b * f ~= a * f * b * d)%Z).
+    {
+      repeat rewrite -> z_mult_assoc.
+      apply z_mult_cancel_l_3.
+      right.
+      rewrite -> z_mult_comm.
+      repeat rewrite <- z_mult_assoc.
+      apply z_mult_cancel_r_3.
+      right.
+      rewrite -> z_mult_comm.
+      reflexivity.
+    }
+    rewrite -> Hrw in H0.
+    clear Hrw.
+    rewrite -> z_add_cancel_l in H0.
+    repeat rewrite -> z_mult_assoc in H0.
+    apply z_mult_cancel_l in H0.
+    2: exact Hnzb.
+    rewrite -> (z_mult_comm b f) in H0.
+    rewrite -> (z_mult_comm b d) in H0.
+    repeat rewrite <- z_mult_assoc in H0.
+    apply z_mult_cancel_r in H0.
+    2: exact Hnzb.
+    exact H0.
+  }
+  {
+    intros H0.
+    rewrite -> H0.
+    reflexivity.
+  }
+Qed.
+
+Proposition q_add_cancel_r : forall (a b c: Q), (a + c ~= b + c) <-> (a ~= b).
+Proof.
+  intros a b c.
+  split.
+  {
+    intros H0.
+    rewrite -> (q_add_comm a c) in H0.
+    rewrite -> (q_add_comm b c) in H0.
+    apply -> q_add_cancel_l in H0.
+    exact H0.
+  }
+  {
+    intros H0.
+    rewrite -> H0.
+    reflexivity.
+  }
 Qed.
 
 Proposition q_mult_cancel_r : 
@@ -6862,6 +7677,23 @@ Proof.
     2: discriminate.
     reflexivity.
   }
+Qed.
+
+Proposition q_z_mult_reduce_2 : forall (a b c d : nat)
+  (Hnzb : ((NZ#b) ~= (NZ#0))%Z -> False)
+  (Hnzd : ((NZ#d) ~= (NZ#0))%Z -> False)
+  (Hnzbd : ((NZ#b*d) ~= (NZ#0))%Z -> False),
+  {| num := (NZ#a); den := (Z_nz_ex (NZ#b) Hnzb) |} * 
+  {| num := (NZ#c); den := (Z_nz_ex (NZ#d) Hnzd) |}
+  ~= {| num := (NZ#a*c); den := (Z_nz_ex (NZ#(b*d)) Hnzbd) |}.
+Proof.
+  intros a b c d Hnzb Hnzd Hnzbd.
+  specialize ((proj1 (z_mult_preserves_ne_z_3 b d)) (conj Hnzb Hnzd)) as Hnzbd'.
+  rewrite -> (q_z_mult_reduce _ _ _ _ _ _ Hnzbd').
+  unfold q_eq.
+  simpl.
+  do 4 rewrite -> z_mult_reduce_non_neg.
+  reflexivity.
 Qed.
 
 (* Still won't help us rewrite in num/den when over q_eq *)
@@ -6982,6 +7814,45 @@ Proof.
   reflexivity.
 Qed.
 
+Proposition q_neg_num_extract : forall (a b : Z) (Hnzb : (b ~= (NZ#0))%Z -> False),
+  {| num := (-- a)%Z; den := (Z_nz_ex b Hnzb) |} ~= 
+  (-- {| num := a; den := (Z_nz_ex b Hnzb) |}).
+Proof.
+  intros a b Hnzb.
+  reflexivity.
+Qed.
+
+Proposition q_neg_den_extract : forall (a b : Z) (Hnzb : (b ~= (NZ#0))%Z -> False)
+  (Hnzb' : ((-- b) ~= (NZ#0))%Z -> False),
+  {| num := a; den := (Z_nz_ex (-- b)%Z Hnzb') |} ~= 
+  (-- {| num := a; den := (Z_nz_ex b Hnzb) |}).
+Proof.
+  intros a b Hnzb Hnzb'.
+  unfold q_eq.
+  simpl.
+  rewrite -> z_neg_extract_from_mult_l.
+  rewrite -> z_neg_extract_from_mult_r.
+  rewrite -> z_neg_reduce_double.
+  reflexivity.
+Qed.
+
+Proposition q_neg_reduce_zq : forall (a : Z), (ZQ# (-- a)) ~= (-- (ZQ#a)).
+Proof.
+  intros a.
+  reflexivity.
+Qed.
+
+Proposition q_zq_reduce_add_neg_l : forall (a b : nat), 
+  ((ZQ# -- (NZ#a) + (NZ#b)) ~= (-- NQ#a) + (NQ#b))%Q.
+Proof.
+  intros a b.
+  unfold q_neg, q_add, q_eq.
+  simpl.
+  do 3 rewrite -> z_mult_ident_r.
+  rewrite -> z_mult_ident_l.
+  reflexivity.
+Qed.
+
 Proposition q_neg_mult_swap_neg : forall (a b : Q), 
   (-- a) * b ~= a * (-- b).
 Proof.
@@ -6991,7 +7862,55 @@ Proof.
   reflexivity.
 Qed.
 
-(*\end{Q extra prev}*)
+Proposition zq_inject : forall (a b : Z), (a ~= b)%Z <-> ((ZQ#a) ~= (ZQ#b)).
+Proof.
+  intros a b.
+  split.
+  {
+    intros H0.
+    unfold ZQ.
+    unfold q_eq.
+    simpl.
+    do 2 rewrite -> z_mult_ident_r.
+    exact H0.
+  }
+  {
+    intros H0.
+    unfold ZQ in H0.
+    unfold q_eq in H0.
+    simpl in H0.
+    do 2 rewrite -> z_mult_ident_r in H0.
+    exact H0.
+  }
+Qed.
+
+Proposition zq_neg_extract : forall (a : Z), (ZQ# (-- a)) ~= (-- (ZQ#a)).
+Proof.
+  intros a.
+  unfold q_neg.
+  unfold q_eq.
+  simpl.
+  rewrite -> z_mult_ident_r.
+  reflexivity.
+Qed.
+
+Proposition q_is_pos_implies_num_nz : forall (a : Q) (Hpa : q_is_pos a),
+  ((num a) ~= (NZ#0))%Z -> False.
+Proof.
+  intros [a [b Hnzb]] Hpa H0.
+  apply q_is_pos_as_pos_no_succ in Hpa.
+  unfold q_is_pos_no_succ in Hpa.
+  destruct Hpa as [p0 [p1 [Hnzp0 [Hnzp1 Hpa]]]].
+  simpl in H0.
+  rewrite (q_num_rewrite _ _ _ _ H0) in Hpa.
+  rewrite -> q_num_0_is_eqv_0_1 in Hpa.
+  symmetry in Hpa.
+  rewrite -> q_num_0_is_eqv_0 in Hpa.
+  specialize (Hnzp0 Hpa).
+  contradiction.
+Qed.
+
+(*\end{Q extra 0}*)
 
 (*\begin{Q is an ordered field}*)
 
@@ -7309,6 +8228,8 @@ Proof.
   exact H03.
 Qed.
 
+(* Depending on application, this can be too slow. Be explicit about 
+   the direction in apply with apply -> or apply <-. *)
 Proposition q_ord_rev : forall a b : Q,
   (a > b) <-> ((-- b) > (-- a)).
 Proof.
@@ -7423,6 +8344,542 @@ Proof.
   }
 Qed.
 
+Proposition q_ge_lhs_rewrite : forall (a a' b : Q) (Heq : a ~= a'),
+  (a >= b)%Q <-> (a' >= b)%Q.
+Proof.
+  intros a a' b Heq.
+  split.
+  {
+    intros H0.
+    unfold q_ge in H0.
+    unfold q_ge.
+    destruct H0 as [H0l | H0r].
+    {
+      specialize (q_ord_lhs_rewrite a a' b Heq) as Hrw.
+      destruct Hrw as [Hrw _].
+      specialize (Hrw H0l).
+      left.
+      exact Hrw.
+    }
+    {
+      right.
+      rewrite <- Heq.
+      exact H0r.
+    }
+  }
+  {
+    intros H0.
+    unfold q_ge in H0.
+    unfold q_ge.
+    destruct H0 as [H0l | H0r].
+    {
+      specialize (q_ord_lhs_rewrite a a' b Heq) as Hrw.
+      destruct Hrw as [_ Hrw].
+      specialize (Hrw H0l).
+      left.
+      exact Hrw.
+    }
+    {
+      right.
+      rewrite <- Heq in H0r.
+      exact H0r.
+    }
+  }
+Qed.
+
+Proposition q_ge_rhs_rewrite : forall (a b b' : Q) (Heq : b ~= b'),
+  (a >= b) <-> (a >= b').
+Proof.
+  intros a a' b Heq.
+  split.
+  {
+    intros H0.
+    unfold q_ge in H0.
+    unfold q_ge.
+    destruct H0 as [H0l | H0r].
+    {
+      specialize (q_ord_rhs_rewrite a a' b Heq) as Hrw.
+      destruct Hrw as [Hrw _].
+      specialize (Hrw H0l).
+      left.
+      exact Hrw.
+    }
+    {
+      right.
+      rewrite <- Heq.
+      exact H0r.
+    }
+  }
+  {
+    intros H0.
+    unfold q_ge in H0.
+    unfold q_ge.
+    destruct H0 as [H0l | H0r].
+    {
+      specialize (q_ord_rhs_rewrite a a' b Heq) as Hrw.
+      destruct Hrw as [_ Hrw].
+      specialize (Hrw H0l).
+      left.
+      exact Hrw.
+    }
+    {
+      right.
+      rewrite <- Heq in H0r.
+      exact H0r.
+    }
+  }
+Qed.
+
+Proposition q_ge_rev : forall a b : Q,
+  (a >= b) <-> ((-- b) >= (-- a)).
+Proof.
+  intros a b.
+  split.
+  {
+    intros H0.
+    unfold q_ge in H0.
+    unfold q_ge.
+    destruct H0 as [H0l | H0r].
+    {
+      left.
+      apply -> q_ord_rev.
+      exact H0l.
+    }
+    {
+      right.
+      rewrite <- q_neg_both_sides.
+      symmetry.
+      exact H0r.
+    }
+  }
+  {
+    intros H0.
+    unfold q_ge in H0.
+    unfold q_ge.
+    destruct H0 as [H0l | H0r].
+    {
+      left.
+      apply <- q_ord_rev.
+      exact H0l.
+    }
+    {
+      right.
+      rewrite <- q_neg_both_sides in H0r.
+      symmetry.
+      exact H0r.
+    }
+  }
+Qed.
+
+Proposition q_ge_refl : forall a : Q, (a >= a)%Q.
+Proof.
+  intros [a [b Hnzb]].
+  unfold q_ge.
+  right.
+  reflexivity.
+Qed.
+
+Proposition q_0_is_not_pos : (q_is_pos (NQ#0)) -> False.
+Proof.
+  intros H0.
+  unfold q_is_pos in H0.
+  destruct H0 as [p0 [p1 [HnzSp1 H0]]].
+  unfold q_eq in H0.
+  simpl in H0.
+  rewrite -> z_mult_0_l in H0.
+  rewrite -> z_mult_ident_r in H0.
+  rewrite -> z_nz_inject in H0.
+  discriminate.
+Qed.
+
+Proposition q_nq_inject : forall (a b : nat),
+  ((NQ#a) ~= (NQ#b))%Q <-> (a = b).
+Proof.
+  intros a b.
+  split.
+  {
+    intros H0.
+    unfold q_eq in H0.
+    simpl in H0.
+    do 2 rewrite -> z_mult_ident_r in H0.
+    rewrite -> z_nz_inject in H0.
+    exact H0.
+  }
+  {
+    intros H0.
+    rewrite -> H0.
+    reflexivity.
+  }
+Qed.
+
+Proposition q_ord_nq_inject : forall (a b : nat),
+  ((NQ# a) > (NQ# b))%Q <-> (a > b)%nat.
+Proof.
+  intros a b.
+  split.
+  {
+    intros H0.
+    destruct (nat_ord_trichotomy_3 a b) as [Heq | [Hgt | Hlt]].
+    {
+      rewrite -> Heq in H0.
+      unfold q_gt in H0.
+      assert (Hrw : (((NQ#b) - (NQ#b)) ~= (NQ#0))%Q ).
+      {
+        unfold q_sub.
+        rewrite -> q_additive_inverse_r.
+        reflexivity.
+      }
+      apply (q_is_pos_rewrite _ _ Hrw) in H0.
+      apply q_0_is_not_pos in H0.
+      contradiction.
+    }
+    {
+      exact Hgt.
+    }
+    {
+      apply gt_as_ge_succ in Hlt.
+      destruct Hlt as [p0 [Hp0 _]].
+      specialize (q_nq_inject b (S a + p0)) as Hrw.
+      destruct Hrw as [_ Hrw].
+      specialize (Hrw Hp0).
+      apply -> (q_ord_rhs_rewrite (NQ#a) _ _ Hrw) in H0.
+      clear Hrw.
+      unfold q_gt in H0.
+      apply q_is_pos_as_pos_no_succ in H0.
+      unfold q_is_pos_no_succ in H0.
+      destruct H0 as [p1 [p2 [Hnzp1 [Hnzp2 H0]]]].
+      rewrite -> q_nq_reduce_sub in H0.
+      unfold q_sub, q_neg, q_add, q_eq in H0.
+      simpl in H0.
+      rewrite -> z_mult_ident_r in H0.
+      unfold z_sub, z_neg, z_mult, z_eq in H0.
+      simpl in H0.
+      do 2 rewrite -> add_0_r in H0.
+      do 2 rewrite -> mult_0_r in H0.
+      rewrite -> add_0_r in H0.
+      rewrite -> def_add_clause_0 in H0.
+      rewrite -> mult_dist_over_add_r in H0.
+      rewrite -> add_comm in H0.
+      rewrite -> add_assoc in H0.
+      rewrite -> (add_comm p2 (a * p2)) in H0.
+      do 2 rewrite <- add_assoc in H0.
+      rewrite -> add_cancel_2 in H0.
+      symmetry in H0.
+      apply zero_sum_zero_parts in H0.
+      destruct H0 as [H0l H0r].
+      specialize (z_nz_inject p2 0) as H1.
+      destruct H1 as [_ H1].
+      specialize (H1 H0l).
+      specialize (Hnzp2 H1).
+      contradiction.
+    }
+  }
+  {
+    intros H0.
+    destruct (q_ord_trichotomy_3 (NQ#a) (NQ#b)) as [Heq | [Hgt | Hlt]].
+    {
+      rewrite -> q_nq_inject in Heq.
+      rewrite -> Heq in H0.
+      apply gt_same_is_false in H0.
+      contradiction.
+    }
+    {
+      exact Hgt.
+    }
+    {
+      apply gt_as_ge_succ in H0.
+      destruct H0 as [p0 [Hp0 _]].
+      rewrite -> Hp0 in Hlt.
+      unfold q_gt in Hlt.
+      apply q_is_pos_as_pos_no_succ in Hlt.
+      unfold q_is_pos_no_succ in Hlt.
+      destruct Hlt as [p1 [p2 [Hnzp1 [Hnzp2 Hlt]]]].
+      rewrite -> q_nq_reduce_sub in Hlt.
+      unfold q_sub, q_neg, q_add, q_eq in Hlt.
+      simpl in Hlt.
+      rewrite -> z_mult_ident_r in Hlt.
+      unfold z_sub, z_neg, z_mult, z_eq in Hlt.
+      simpl in Hlt.
+      do 2 rewrite -> add_0_r in Hlt.
+      do 2 rewrite -> mult_0_r in Hlt.
+      rewrite -> add_0_r in Hlt.
+      rewrite -> def_add_clause_0 in Hlt.
+      rewrite -> mult_dist_over_add_r in Hlt.
+      rewrite -> add_comm in Hlt.
+      rewrite -> add_assoc in Hlt.
+      rewrite -> (add_comm p2 (b * p2)) in Hlt.
+      do 2 rewrite <- add_assoc in Hlt.
+      rewrite -> add_cancel_2 in Hlt.
+      symmetry in Hlt.
+      apply zero_sum_zero_parts in Hlt.
+      destruct Hlt as [Hltl Hltr].
+      specialize (z_nz_inject p2 0) as H1.
+      destruct H1 as [_ H1].
+      specialize (H1 Hltl).
+      specialize (Hnzp2 H1).
+      contradiction.
+    }
+  }
+Qed.
+
+Proposition q_ord_is_add_invariant_l : forall (a b c : Q),
+   ((b > c) <-> (a + b) > (a + c))%Q.
+Proof.
+  intros a b c.
+  assert (Hrw: a + b - (a + c) ~= b - c).
+  {
+    unfold q_sub.
+    rewrite -> q_neg_dist_over_add.
+    rewrite -> q_add_assoc.
+    rewrite -> q_add_assoc_middle.
+    rewrite -> (q_add_comm b (-- a)).
+    rewrite <- q_add_assoc_middle.
+    rewrite <- q_add_assoc.
+    rewrite -> q_additive_inverse_r.
+    rewrite -> q_add_0_l.
+    reflexivity.
+  }
+  split.
+  {
+    intros H0.
+    unfold q_gt in *.
+    apply (q_is_pos_rewrite _ _ Hrw).
+    exact H0.
+  }
+  {
+    intros H0.
+    unfold q_gt in *.
+    apply (q_is_pos_rewrite _ _ Hrw).
+    exact H0.
+  }
+Qed.
+
+Proposition q_ord_is_add_invariant_r : forall (a b c : Q),
+   ((a > b) <-> (a + c) > (b + c))%Q.
+Proof.
+  intros a b c.
+  split.
+  {
+    intros H0.
+    specialize (q_add_comm a c) as Hrw1.
+    specialize (q_add_comm b c) as Hrw2.
+    apply (q_ord_lhs_rewrite _ _ _ Hrw1).
+    apply (q_ord_rhs_rewrite _ _ _ Hrw2).
+    apply -> q_ord_is_add_invariant_l.
+    exact H0.
+  }
+  {
+    intros H0.
+    apply <- (q_ord_is_add_invariant_l c).
+    specialize (q_add_comm c a) as Hrw1.
+    specialize (q_add_comm c b) as Hrw2.
+    apply (q_ord_lhs_rewrite _ _ _ Hrw1).
+    apply (q_ord_rhs_rewrite _ _ _ Hrw2).
+    exact H0.
+  }
+Qed.
+
+Proposition q_normal_form_a_pos_implies_pos : forall (a b : nat) 
+  (Hnza : ((NZ#a) ~= (NZ#0))%Z -> False) (Hnzb : ((NZ#b) ~= (NZ#0))%Z -> False),
+  (q_is_pos {| num := (NZ#a); den := (Z_nz_ex (NZ#b) Hnzb) |}).
+Proof.
+  intros a b Hnza Hnzb.
+  apply q_is_pos_as_pos_no_succ.
+  unfold q_is_pos_no_succ.
+  exists (a).
+  exists (b).
+  exists (Hnza).
+  exists (Hnzb).
+  unfold q_eq.
+  simpl.
+  unfold z_mult, z_eq.
+  simpl.
+  do 2 rewrite -> add_0_r.
+  rewrite -> mult_0_r.
+  rewrite -> add_0_r.
+  reflexivity.
+Qed.
+
+Proposition q_nq_pos_implies_q_is_pos : forall (a : nat) 
+  (Hnza : ((NZ#a) ~= (NZ#0))%Z -> False), (q_is_pos (NQ# a)).
+Proof.
+  intros a Hnza.
+  apply q_is_pos_as_pos_no_succ.
+  unfold q_is_pos_no_succ.
+  exists (a).
+  exists (1).
+  exists (Hnza).
+  exists ((proj2_sig z_nz_1)).
+  unfold q_eq.
+  simpl.
+  reflexivity.
+Qed.
+  
+
+Proposition q_normal_form_ge_0 : forall (a b : nat) (Hnzb : ((NZ#b) ~= (NZ#0))%Z -> False),
+  ({| num := (NZ#a); den := (Z_nz_ex (NZ#b) Hnzb) |} >= (NQ#0))%Q.
+Proof.
+  intros a b Hnzb.
+  unfold q_ge.
+  destruct a as [| a'].
+  {
+    right.
+    apply q_num_0_is_eqv_0_1.
+  }
+  {
+    left.
+    unfold q_gt.
+    apply (q_is_pos_rewrite _ _ (q_reduce_sub_0 ((NZ# S a') /Q Z_nz_ex (NZ# b) Hnzb))).
+    specialize (z_pos_ne_0 a') as Hpa'.
+    apply q_normal_form_a_pos_implies_pos.
+    exact Hpa'.
+  }
+Qed.
+
+Proposition q_ord_is_pos_mult_invariant_l : forall (a b c : Q) 
+  (Hpa : q_is_pos a), ((b > c) <-> (a * b) > (a * c))%Q.
+Proof.
+  intros a b c Hpa.
+  split.
+  {
+      intros H0.
+      unfold q_gt in H0.
+      apply q_is_pos_as_pos_no_succ in H0.
+      destruct H0 as [p0 [p1 [Hnzp0 [Hnzp1 H0]]]].
+      unfold q_gt.
+      apply q_is_pos_as_pos_no_succ.
+      unfold q_is_pos_no_succ.
+      apply q_is_pos_as_pos_no_succ in Hpa.
+      destruct Hpa as [p2 [p3 [Hnzp2 [Hnzp3 Hgta]]]].
+      specialize ((proj1 (z_mult_preserves_ne_z_1 p2 p0)) (conj Hnzp2 Hnzp0)) as Hnzp2p0.
+      specialize ((proj1 (z_mult_preserves_ne_z_1 p3 p1)) (conj Hnzp3 Hnzp1)) as Hnzp3p1.
+      exists ((p2 * p0)%nat).
+      exists ((p3 * p1)%nat).
+      exists (Hnzp2p0).
+      exists (Hnzp3p1).
+      unfold q_sub.
+      rewrite <- q_neg_extract_from_mult_r.
+      rewrite <- q_mult_dist_over_add_l.
+      rewrite -> q_sub_refold.
+      rewrite -> H0.
+      rewrite -> Hgta.
+      rewrite -> (q_z_mult_reduce_2 _ _ _ _ _ _ Hnzp3p1).
+      reflexivity.
+  }
+  {
+    intros H0.
+    unfold q_gt in H0.
+    apply q_is_pos_as_pos_no_succ in H0.
+    destruct H0 as [p0 [p1 [Hnzp0 [Hnzp1 H0]]]].
+    apply q_is_pos_as_pos_no_succ in Hpa.
+    destruct Hpa as [p2 [p3 [Hnzp2 [Hnzp3 Hgta]]]].
+    unfold q_sub in H0.
+    rewrite <- q_neg_extract_from_mult_r in H0.
+    rewrite <- q_mult_dist_over_add_l in H0.
+    rewrite -> q_sub_refold in H0.
+    apply <- (q_mult_cancel_l (a * (b - c)) 
+       ((NZ# p0) /Q Z_nz_ex (NZ# p1) Hnzp1)
+       {| num := (NZ#p3); den := (Z_nz_ex (NZ#p2) Hnzp2) |}) in H0.
+    2: exact Hnzp3.
+    rewrite -> Hgta in H0.
+    rewrite <- q_mult_assoc in H0.
+    rewrite -> q_norm_multiplicative_inverse in H0.
+    rewrite -> q_mult_ident_l in H0.
+    specialize ((proj1 (z_mult_preserves_ne_z_1 p2 p1)) (conj Hnzp2 Hnzp1)) as Hnzp2p1.
+    rewrite -> (q_z_mult_reduce_2 p3 p2 p0 p1 Hnzp2 Hnzp1 Hnzp2p1) in H0.
+    unfold q_gt.
+    specialize ((proj1 (z_mult_preserves_ne_z_1 p3 p0)) (conj Hnzp3 Hnzp0)) as Hnzp3p0.
+    specialize (q_normal_form_a_pos_implies_pos (p3 * p0) (p2 * p1) Hnzp3p0 Hnzp2p1) as H1.
+    apply (q_is_pos_rewrite _ _ H0).
+    exact H1.
+  }
+Qed.
+
+Proposition q_ord_is_pos_mult_invariant_r : forall (a b c : Q) 
+  (Hpc : q_is_pos c), ((a > b) <-> (a * c) > (b * c))%Q.
+Proof.
+  intros a b c Hpc.
+  split.
+  {
+    intros H0.
+    apply (q_ord_lhs_rewrite (a * c) (c * a) _ (q_mult_comm a c)).
+    apply (q_ord_rhs_rewrite _ (b * c) (c * b) (q_mult_comm b c)).
+    apply -> q_ord_is_pos_mult_invariant_l.
+    1: exact H0. 1: exact Hpc.
+  }
+  {
+    intros H0.
+    specialize (proj1 (q_ord_lhs_rewrite (a * c) (c * a) (b * c) (q_mult_comm a c))) as Hrw;
+    apply Hrw in H0; clear Hrw.
+    specialize (proj1 (q_ord_rhs_rewrite (c * a) (b * c) (c * b) (q_mult_comm b c))) as Hrw;
+    apply Hrw in H0; clear Hrw.
+    specialize (proj2 (q_ord_is_pos_mult_invariant_l c a b Hpc) H0) as H1.
+    exact H1.
+  }
+Qed.
+
+Proposition q_ge_is_add_invariant_l : forall (a b c : Q),
+   ((b >= c) <-> (a + b) >= (a + c))%Q.
+Proof.
+  intros a b c.
+  split.
+  {
+    intros H0.
+    unfold q_ge in *.
+    destruct H0 as [H0l | H0r].
+    {
+      left.
+      apply -> (q_ord_is_add_invariant_l a) in H0l.
+      exact H0l.
+    }
+    {
+      right.
+      apply q_add_cancel_l.
+      exact H0r.
+    }
+  }
+  {
+    intros H0.
+    unfold q_ge in *.
+    destruct H0 as [H0l | H0r].
+    {
+      left.
+      apply <- (q_ord_is_add_invariant_l a) in H0l.
+      exact H0l.
+    }
+    {
+      right.
+      apply q_add_cancel_l in H0r.
+      exact H0r.
+    }
+  }
+Qed.
+
+Proposition q_ge_is_add_invariant_r : forall (a b c : Q),
+   ((a >= b) <-> (a + c) >= (b + c))%Q.
+Proof.
+  intros a b c.
+  split.
+  {
+    intros H0.
+    specialize (q_add_comm a c) as Hrw1.
+    specialize (q_add_comm b c) as Hrw2.
+    apply (q_ge_lhs_rewrite _ _ _ Hrw1).
+    apply (q_ge_rhs_rewrite _ _ _ Hrw2).
+    apply -> q_ge_is_add_invariant_l.
+    exact H0.
+  }
+  {
+    intros H0.
+    apply <- (q_ge_is_add_invariant_l c).
+    specialize (q_add_comm c a) as Hrw1.
+    specialize (q_add_comm c b) as Hrw2.
+    apply (q_ge_lhs_rewrite _ _ _ Hrw1).
+    apply (q_ge_rhs_rewrite _ _ _ Hrw2).
+    exact H0.
+  }
+Qed.
+
 Proposition q_neg_mult_reverses_ord : forall a b c : Q, 
   (a > b) -> (q_is_neg c) -> (b*c > a*c).
 Proof.
@@ -7438,8 +8895,8 @@ Proof.
   apply -> (q_is_neg_rewrite _ _ Hrw) in H1.
   clear Hrw.
   apply -> q_neg_diff_is_pos_rev in H1.
-  apply q_ord_rev in H0.
-  apply q_ord_rev.
+  apply -> q_ord_rev in H0.
+  apply <- q_ord_rev.
   assert (Hrw : (-- ( {| num := a; den := (Z_nz_ex b Hnzb) |} ) * 
                 (   {| num := e; den := (Z_nz_ex f Hnzf) |})) ~= 
                 (   {| num := a; den := (Z_nz_ex b Hnzb) |}) *
@@ -7482,10 +8939,13 @@ Qed.
 
 (*\end{Q is an ordered field}*)
 
-(*\begin{Q extra}*)
-(*\end{Q extra}*)
+(*\begin{Q extra last}*)
 
-(*\begin{Q abs and exp}*)
+Definition Q_pos := { a : Q | (q_is_pos a) }.
+
+(*\end{Q extra last}*)
+
+(*\begin{Q abs and epsilon}*)
 
 Fixpoint nat_diff (a b : nat) : nat :=
   match a, b with
@@ -8323,6 +9783,7 @@ Proof.
   }
 Qed.
 
+(*TODO
 Proposition q_abs_triangle_inequality : forall (a b : Q),
   ((q_abs a) + (q_abs b) >= (q_abs (a + b)))%Q.
 
@@ -8378,8 +9839,836 @@ Proposition q_eps_close_multiplicative_1 : forall (a b eps : Q) (c : Q_nz)
 Proposition q_eps_close_multiplicative_2 : forall (a b c d eps1 eps2 : Q) 
   (Hpeps1 : (q_is_pos eps1)) (Hpeps2 : (q_is_pos eps2))
   (Hp1 : (q_is_pos (eps1 * (q_abs c) + eps2 * (q_abs a) + eps1 * eps2))),
+  (q_eps_close a b eps1 Hpeps1) -> 
+  (q_eps_close c d eps2 Hpeps2) -> 
+  (q_eps_close (a*c) (b*d) (eps1 * (q_abs c) + eps2 * (q_abs a) + eps1 * eps2) Hp1).
 
-(*\end{Q abs and exp}*)
+*)
+(*\end{Q abs and epsilon}*)
+
+(*\begin{Q exp}*)
+
+Fixpoint q_pexp (a : Q) (n : nat) : Q :=
+  match n with
+  | 0 => (NQ#1)
+  | (S n') => (q_mult a (q_pexp a n'))
+  end.
+
+Notation "x ** y" := (q_pexp x y) (at level 45) : Q_scope.
+
+(*TODO
+Proposition q_pexp_mult_as_exp_add : forall (a : Q) (n m : nat),
+  (a ** n) * (a ** m) ~= (a ** (n + m)).
+  
+Proposition q_pexp_dist_mult_as_exp_mult : forall (a : Q) (n m : nat),
+  ((a ** n) ** m) ~= (a ** (n * m)).
+
+Proposition q_pexp_dist_over_mult : forall (a b : Q) (n : nat),
+  ((a * b) ** n) ~= (a ** n) * (b ** n).
+
+Proposition q_pexp_only_0_evals_to_0_for_pos_exp : forall (a : Q) (n : nat) 
+  (Hnzn : (n > 0)%nat), ((a ** n) ~= (NQ#0)) <-> (a ~= (NQ#0)).
+
+Proposition q_pexp_preserves_ge_ge_0 : forall (a b : Q) (n : nat),
+  ((a >= b) /\ (b >= (NQ#0))) <-> (((a ** n) >= (b ** n)) /\ ((b ** n) >= (NQ#0))).
+
+Proposition q_pexp_preserves_gt_ge_0 : forall (a b : Q) (n : nat)
+  (Hnzn : (n > 0)%nat),
+  ((a > b) /\ (b >= (NQ#0))) <-> (((a ** n) > (b ** n)) /\ ((b ** n) >= (NQ#0))).
+
+Proposition q_pexp_extract_exp_from_q_abs : forall (a : Q) (n : nat),
+  (q_abs (a ** n)) ~= ((q_abs a) ** n).
+
+*)
+
+Definition q_nexp (a : Q) (Hnza : (num(a) ~= (NZ#0))%Z -> False) (n : nat) : Q :=
+  (q_pexp (q_recip a Hnza) n).
+
+
+(*\end{Q exp}*)
+
+Proposition nat_f_has_lower_bound_0 : forall f : nat -> nat,
+  forall a : nat, (f a >= 0)%nat.
+Proof.
+  intros f a.
+  unfold ge.
+  exists (f a).
+  split.
+  {
+    rewrite -> def_add_clause_0.
+    reflexivity.
+  }
+  {
+    intros x' Hx'.
+    rewrite -> def_add_clause_0 in Hx'.
+    exact Hx'.
+  }
+Qed.
+
+Proposition nat_infinite_descent_implies_f_0_max_1 :
+  forall (f : nat -> nat) (n : nat), (forall k: nat, f k > f (S k))%nat -> (f 0 >= f n)%nat.
+Proof.
+  intros f n H0.
+  induction n as [| n' IHn'].
+  {
+    unfold ge.
+    exists (0).
+    split.
+    {
+      rewrite -> add_0_r.
+      reflexivity.
+    }
+    {
+      intros x' Hx'.
+      apply add_cancel_2 in Hx'.
+      exact Hx'.
+    }
+  }
+  {
+    specialize (H0 n').
+    inversion H0 as [H00 H01].
+    apply (ge_trans (f 0) (f n') (f (S n'))).
+    1: exact IHn'. 1: exact H00.
+  }
+Qed.
+
+Proposition nat_infinite_descent_implies_f_0_max_2 :
+  forall (f : nat -> nat) (n : nat), (forall k: nat, f k > f (S k))%nat -> (f 0 > f (S n))%nat.
+Proof.
+  intros f n H0.
+  induction n as [| n' IHn'].
+  {
+    specialize (H0 0).
+    exact H0.
+  }
+  {
+    specialize (H0 (S n')).
+    specialize (gt_trans (f 0) (f (S n')) (f (S (S n'))) IHn' H0) as H1.
+    exact H1.
+  }
+Qed.
+
+Proposition nat_infinite_descent_implies_at_least_n_decrements :
+  forall (f : nat -> nat) (n : nat), 
+  (forall k: nat, f k > f (S k))%nat -> ((f 0) >= (f n) + n)%nat.
+Proof.
+  intros f n H0.
+  induction n as [| n'].
+  {
+    rewrite -> add_0_r.
+    apply ge_refl.
+  }
+  {
+    destruct IHn' as [p0 [Hp0 _]].
+    unfold ge.
+    specialize (nat_infinite_descent_implies_f_0_max_2 f (n') H0) as H1.
+    destruct H1 as [[p1 [Hp1 _]] H1r].
+    destruct p1 as [| p1'].
+    {
+      rewrite -> add_0_r in Hp1.
+      specialize (H1r Hp1).
+      contradiction.
+    }
+    {
+      clear H1r.
+      specialize (H0 n') as H1.
+      destruct H1 as [[p2 [Hp2 _]] H1r].
+      rewrite -> Hp2 in Hp0.
+      destruct p2 as [| p2'].
+      {
+        rewrite -> add_0_r in Hp2.
+        specialize (H1r Hp2).
+        contradiction.
+      }
+      {
+        clear H1r.
+        rewrite <- add_assoc in Hp0.
+        rewrite <- add_assoc in Hp0.
+        rewrite -> add_swap_s in Hp0.
+        rewrite <- def_add_clause_1 in Hp0.
+        rewrite -> add_assoc in Hp0.
+        rewrite -> add_assoc_middle in Hp0.
+        rewrite -> (add_comm p2' (S n')) in Hp0.
+        rewrite <- add_assoc_middle in Hp0.
+        exists (p2' + p0)%nat.
+        split.
+        {
+          rewrite -> Hp0.
+          reflexivity.
+        }
+        {
+          intros x' Hx'.
+          rewrite -> Hp0 in Hx'.
+          apply add_cancel in Hx'.
+          exact Hx'.
+        }
+      }
+    }
+  }
+Qed.
+
+Proposition nat_no_infinite_descent : forall f : nat -> nat,
+  (forall n, f n > f (S n))%nat -> False.
+Proof.
+  intros f H0.
+  remember (S (f 0)) as m.
+  induction m as [| m' IHm'].
+  {
+    discriminate.
+  }
+  {
+    injection Heqm as Heqm.
+    specialize (nat_infinite_descent_implies_at_least_n_decrements f (m') H0) as H1.
+    destruct H1 as [p0 [Hp0 _]].
+    rewrite <- Heqm in Hp0.
+    rewrite <- add_assoc in Hp0.
+    rewrite -> add_comm in Hp0.
+    rewrite <- add_assoc in Hp0.
+    apply -> add_cancel_2 in Hp0.
+    symmetry in Hp0.
+    apply zero_sum_zero_parts in Hp0.
+    destruct Hp0 as [_ Hzfm'].
+    specialize (H0 m') as H1.
+    rewrite -> Hzfm' in H1.
+    specialize (gt_0_l_is_false (f (S m')) H1) as H2.
+    contradiction.
+  }
+Qed.
+
+(*\begin{Q interspersing}*)
+Proposition q_in_euclid_div_form : forall (a b : nat) (Hnzb : ((NZ#b) ~= (NZ#0))%Z -> False), 
+  exists k l : nat, ({| num := (NZ#a); den := (Z_nz_ex (NZ#b) Hnzb) |} ~= (NQ#k) + 
+  {| num := (NZ#l); den := (Z_nz_ex (NZ#b) Hnzb) |}) /\ (b > l)%nat.
+Proof.
+  intros a b Hnzb.
+  destruct b as [| b'].
+  {
+    exfalso.
+    apply Hnzb.
+    reflexivity.
+  }
+  {
+    specialize (nat_euclid_div a b') as H0.
+    destruct H0 as [k [l [Hmod Hdiv]]].
+    exists (k).
+    exists (l).
+    split.
+    {
+      unfold q_add.
+      unfold q_eq.
+      simpl.
+      do 2 rewrite -> z_mult_ident_l.
+      do 2 rewrite -> z_mult_reduce_non_neg.
+      rewrite -> z_add_reduce_non_neg.
+      rewrite -> z_mult_reduce_non_neg.
+      rewrite -> z_nz_inject.
+      apply mult_cancel_r.
+      left.
+      exact Hdiv.
+    }
+    {
+      exact Hmod.
+    }
+  }
+Qed.
+
+Proposition q_normal_form_sign_dichotomy : forall (q : Q), exists (a b : nat)
+  (Hnzb : ((NZ#b) ~= (NZ#0))%Z -> False), 
+  (q ~= {| num := (NZ#a); den := (Z_nz_ex (NZ#b) Hnzb) |}) \/ 
+  (q ~= (-- {| num := (NZ#a); den := (Z_nz_ex (NZ#b) Hnzb) |})).
+Proof.
+  intros [z1 [z2 Hnzz2]].
+  destruct (z_normal_form_sign_dichotomy z1) as [a [Hnnz1 | Hnz1]].
+  {
+    destruct (z_normal_form_sign_dichotomy z2) as [b [Hnnz2 | Hnz2]].
+    {
+      specialize (z_normal_form_preserves_nz_pos z2 b Hnnz2 Hnzz2) as Hnzb.
+      exists (a).
+      exists (b).
+      exists (Hnzb).
+      left.
+      specialize (q_num_rewrite z1 (NZ#a) z2 Hnzz2 Hnnz1) as Hrw.
+      rewrite -> Hrw.
+      clear Hrw.
+      specialize (q_den_rewrite (NZ#a) z2 (NZ#b) Hnzz2 Hnzb Hnnz2) as Hrw.
+      rewrite -> Hrw.
+      clear Hrw.
+      reflexivity.
+    }
+    {
+      specialize (z_normal_form_preserves_nz_neg z2 b Hnz2 Hnzz2) as Hnzb.
+      exists (a).
+      exists (b).
+      exists (Hnzb).
+      right.
+      specialize (q_num_rewrite z1 (NZ#a) z2 Hnzz2 Hnnz1) as Hrw.
+      rewrite -> Hrw.
+      clear Hrw.
+      specialize (z_sign_preserves_nz b) as Hnzb'.
+      destruct Hnzb' as [Hnzb' _].
+      specialize (Hnzb' Hnzb).
+      specialize (q_den_rewrite (NZ#a) z2 (-- (NZ#b)) Hnzz2 Hnzb' Hnz2) as Hrw.
+      rewrite -> Hrw.
+      clear Hrw.
+      rewrite -> (q_neg_den_extract _ _ Hnzb _).
+      reflexivity.
+    }
+  }
+  {
+    destruct (z_normal_form_sign_dichotomy z2) as [b [Hnnz2 | Hnz2]].
+    {
+      specialize (z_normal_form_preserves_nz_pos z2 b Hnnz2 Hnzz2) as Hnzb.
+      exists (a).
+      exists (b).
+      exists (Hnzb).
+      right.
+      specialize (q_num_rewrite z1 (-- NZ#a) z2 Hnzz2 Hnz1) as Hrw.
+      rewrite -> Hrw.
+      clear Hrw.
+      specialize (q_den_rewrite (-- NZ#a) z2 (NZ#b) Hnzz2 Hnzb Hnnz2) as Hrw.
+      rewrite -> Hrw.
+      clear Hrw.
+      reflexivity.
+    }
+    {
+      specialize (z_normal_form_preserves_nz_neg z2 b Hnz2 Hnzz2) as Hnzb.
+      exists (a).
+      exists (b).
+      exists (Hnzb).
+      left.
+      specialize (q_num_rewrite z1 (-- NZ#a) z2 Hnzz2 Hnz1) as Hrw.
+      rewrite -> Hrw.
+      clear Hrw.
+      specialize (z_sign_preserves_nz b) as Hnzb'.
+      destruct Hnzb' as [Hnzb' _].
+      specialize (Hnzb' Hnzb).
+      specialize (q_den_rewrite (-- NZ#a) z2 (-- NZ#b) Hnzz2 Hnzb' Hnz2) as Hrw.
+      rewrite -> Hrw.
+      clear Hrw.
+      rewrite -> (q_neg_den_extract _ _ Hnzb _).
+      rewrite -> q_neg_num_extract.
+      rewrite -> q_neg_reduce_double.
+      reflexivity.
+    }
+  }
+Qed.
+
+Proposition q_1_sub_fraction_is_pos : forall (a b : nat) (Hnzb : ((NZ#b) ~= (NZ#0))%Z -> False),
+  (b > a)%nat -> (q_is_pos ((NQ#1) - {| num := (NZ#a); den := (Z_nz_ex (NZ#b) Hnzb) |})).
+Proof.
+  intros a b Hnzb Hfrac.
+  assert (Hrw : (NQ# 1) - ((NZ# a) /Q Z_nz_ex (NZ# b) Hnzb) ~=
+                (((NZ# b) - (NZ#a)) /Q Z_nz_ex (NZ# b) Hnzb)).
+  {
+    unfold q_sub.
+    rewrite -> (q_nq_1_is_same_num_den b Hnzb).
+    rewrite -> q_sub_refold.
+    rewrite -> q_div_reduce_sub_formal_same_den_2.
+    reflexivity.
+  }
+  apply (q_is_pos_rewrite _ _ Hrw).
+  apply q_is_pos_as_pos_no_succ.
+  apply gt_as_ge_succ in Hfrac.
+  destruct Hfrac as [p0 [Hp0 _]].
+  unfold q_is_pos_no_succ.
+  rewrite -> add_swap_s in Hp0.
+  specialize (z_pos_ne_0 p0) as Hnzp0.
+  exists (S p0).
+  exists (b).
+  exists (Hnzp0).
+  exists (Hnzb).
+  unfold q_sub, q_neg, q_add, q_eq.
+  simpl.
+  unfold z_sub, z_neg, z_add, z_mult, z_eq.
+  simpl.
+  do 3 rewrite -> add_0_r.
+  do 3 rewrite -> mult_0_r.
+  do 2 rewrite -> add_0_r.
+  rewrite -> def_add_clause_0.
+  rewrite <- add_assoc.
+  rewrite <- mult_dist_over_add_r.
+  rewrite <- def_mult_clause_1.
+  rewrite -> mult_cancel_r.
+  left.
+  rewrite -> Hp0.
+  rewrite <- def_add_clause_1.
+  rewrite -> add_comm.
+  reflexivity.
+Qed.
+
+Proposition q_floor_pos : forall (a : Q),
+  (q_is_pos a) -> exists k : nat, ((a >= (NQ#k) /\ (NQ#k + 1) > a)).
+Proof.
+  intros q H0.
+  apply q_is_pos_as_pos_no_succ in H0.
+  unfold q_is_pos_no_succ in H0.
+  destruct H0 as [p0 [p1 [Hnzp0 [Hnzp1 H0]]]].
+  specialize (q_in_euclid_div_form p0 p1 Hnzp1) as Hdiv.
+  destruct Hdiv as [k [l [Hdiv Hmod]]].
+  exists (k).
+  split.
+  {
+    apply (q_ge_lhs_rewrite _ _ _ H0).
+    apply (q_ge_lhs_rewrite _ _ _ Hdiv).
+    specialize (q_add_0_r (NQ#k)) as Hrw.
+    symmetry in Hrw.
+    apply (q_ge_rhs_rewrite _ _ _ Hrw); clear Hrw.
+    specialize (q_ge_is_add_invariant_l 
+      (NQ#k) (((NZ# l) /Q Z_nz_ex (NZ# p1) Hnzp1)) (NQ#0)) as Hrw.
+    destruct Hrw as [Hrw _].
+    apply Hrw.
+    apply q_normal_form_ge_0.
+  }
+  {
+    apply (q_ord_rhs_rewrite _ _ _ H0).
+    apply (q_ord_rhs_rewrite _ _ _ Hdiv).
+    specialize (q_nq_reduce_add k 1) as Hrw.
+    symmetry in Hrw.
+    apply (q_ord_lhs_rewrite _ _ _ Hrw); clear Hrw.
+    specialize (q_ord_is_add_invariant_l
+      (NQ#k) (NQ#1) (((NZ# l) /Q Z_nz_ex (NZ# p1) Hnzp1))
+    ) as Hrw.
+    destruct Hrw as [Hrw _].
+    apply Hrw.
+    unfold q_gt.
+    apply q_1_sub_fraction_is_pos.
+    exact Hmod.
+  }
+Qed.
+
+Proposition q_floor_in_z : forall (a : Q),
+  exists k : Z, ((a >= (ZQ#k) /\ (ZQ#k + (NZ#1)) > a)).
+Proof.
+  intros q.
+  destruct (q_trichotomy_3 q) as [Heqq | [Hpq | Hnq]].
+  {
+    exists ((NZ#0)).
+    split.
+    {
+      apply (q_ge_lhs_rewrite _ _ _ Heqq).
+      apply q_ge_refl.
+    }
+    {
+      apply (q_ord_rhs_rewrite _ _ _ Heqq).
+      specialize (z_nz_reduce_add 0 1) as Hrw.
+      apply zq_inject in Hrw.
+      simpl in Hrw.
+      apply (q_ord_lhs_rewrite _ _ _ Hrw).
+      apply <- q_ord_nq_inject.
+      apply gt_succ_l_0_r.
+    }
+  }
+  2:
+  {
+    destruct Hnq as [q1 [Hpq1 Hnq]].
+    specialize (q_floor_pos q1 Hpq1) as H0.
+    destruct H0 as [k1 [Hfl0 Hfl1]].
+    destruct Hfl0 as [Hfl0l | Hfl0r].
+    {
+      exists (((-- NZ#(k1)) - (NZ#1))%Z).
+      split.
+      {
+        apply (q_ge_lhs_rewrite _ _ _ Hnq).
+        specialize (z_neg_extract_from_sub_neg_l k1 1) as Hrw.
+        apply zq_inject in Hrw.
+        apply (q_ge_rhs_rewrite _ _ _ Hrw); clear Hrw.
+        apply (q_ge_rhs_rewrite _ _ _ (q_neg_reduce_zq (NZ# k1 + 1))).
+        apply -> q_ge_rev.
+        unfold q_ge.
+        left.
+        exact Hfl1.
+      }
+      {
+        apply (q_ord_rhs_rewrite _ _ _ Hnq).
+        assert (Hrw : ((-- (NZ# k1) - (NZ# 1) + (NZ# 1)) ~= 
+                      (-- (NZ# k1)))%Z).
+        {
+          unfold z_sub.
+          rewrite -> z_add_assoc.
+          rewrite -> z_additive_inverse_l.
+          rewrite -> z_add_0_r.
+          reflexivity.
+        }
+        apply zq_inject in Hrw.
+        apply (q_ord_lhs_rewrite _ _ _ Hrw); clear Hrw.
+        apply (q_ord_lhs_rewrite _ _ _  (q_neg_reduce_zq (NZ#k1))).
+        apply -> q_ord_rev.
+        exact Hfl0l.
+      }
+    }
+    {
+      exists ((-- NZ#(k1))%Z).
+      split.
+      {
+        apply (q_ge_lhs_rewrite _ _ _ Hnq).
+        apply (q_ge_rhs_rewrite _ _ _ (q_neg_reduce_zq (NZ# k1))).
+        apply -> q_ge_rev.
+        unfold q_ge.
+        right.
+        exact (q_eq_sym _ _ Hfl0r).
+      }
+      {
+        apply (q_ord_rhs_rewrite _ _ _ Hnq).
+        specialize (q_neg_both_sides q1 (NQ#k1)) as [Hrw _].
+        specialize (Hrw Hfl0r).
+        apply (q_ord_rhs_rewrite _ _ _ Hrw); clear Hrw.
+        apply (q_ord_lhs_rewrite _ _ _ (q_zq_reduce_add_neg_l k1 1)).
+        apply (q_ord_rhs_rewrite _ _ _ (q_eq_sym _ _ (q_add_0_r (-- (NQ#k1))))).
+        specialize (q_ord_is_add_invariant_l (-- (NQ#k1)) (NQ#1) (NQ#0)) as [Hrw _].
+        apply Hrw; clear Hrw.
+        apply q_ord_nq_inject.
+        apply gt_succ_l_0_r.
+      }
+    }
+  }
+  {
+    specialize (q_floor_pos q Hpq) as [k [Hfl0 Hfl1]].
+    exists (NZ#k).
+    split.
+    {
+      exact Hfl0.
+    }
+    {
+      exact Hfl1.
+    }
+  }
+Qed.
+
+Proposition q_ord_pair_has_midpoint : forall (a b : Q) (Hgtba : (b > a)),
+  exists k : Q, ((k > a) /\ (b > k)).
+Proof.
+  intros a b Hgtba.
+  specialize (z_pos_ne_0 1) as Hnz2.
+  specialize (q_nz_from_q (NQ#2) Hnz2) as nq_2.
+  specialize (q_nq_pos_implies_q_is_pos 2 Hnz2) as Hp2.
+  assert (Hrw : (a + b) * ((NZ# 1) /Q Z_nz_ex (NZ# 2) Hnz2) * (NQ# 2) ~=
+                (a + b)).
+  {
+    rewrite -> q_mult_assoc.
+    rewrite -> q_nq_multiplicative_inverse_r.
+    rewrite -> q_mult_ident_r.
+    reflexivity.
+  }
+  exists ((a + b) * {| num := (NZ#1); den := (Z_nz_ex (NZ#2) Hnz2) |}).
+  split.
+  {
+    apply <- (q_ord_is_pos_mult_invariant_r 
+      ((a + b) * ((NZ# 1) /Q Z_nz_ex (NZ# 2) Hnz2)) a (NQ#2)).
+    2: exact Hp2.
+    apply (q_ord_lhs_rewrite _ _ _ Hrw); clear Hrw.
+    apply (q_ord_rhs_rewrite _ _ _ (q_double_is_same_add a)).
+    apply -> q_ord_is_add_invariant_l.
+    exact Hgtba.
+  }
+  {
+    apply <- (q_ord_is_pos_mult_invariant_r 
+      b ((a + b) * ((NZ# 1) /Q Z_nz_ex (NZ# 2) Hnz2)) (NQ#2)).
+    2: exact Hp2.
+    apply (q_ord_rhs_rewrite _ _ _ Hrw); clear Hrw.
+    apply (q_ord_lhs_rewrite _ _ _ (q_double_is_same_add b)).
+    apply -> q_ord_is_add_invariant_r.
+    exact Hgtba.
+  }
+Qed.
+
+Proposition nat_le_a_and_ge_succ_a_implies_always : forall (p : Prop) (a b : nat),
+  (a >= b -> p)%nat -> (b >= (S a) -> p)%nat -> p.
+Proof.
+  intros p a b H0 H1.
+  destruct (nat_ord_trichotomy_3 a b) as [Heq | [Hgt | Hlt]].
+  {
+    apply eq_implies_ge in Heq.
+    specialize (H0 Heq).
+    exact H0.
+  }
+  {
+    apply gt_implies_ge in Hgt.
+    specialize (H0 Hgt).
+    exact H0.
+  }
+  {
+    apply gt_as_ge_succ in Hlt.
+    specialize (H1 Hlt).
+    exact H1.
+  }
+Qed.
+
+Proposition nat_no_sqrt_2 : forall (a : nat),
+  (a*a = 2)%nat -> False.
+Proof.
+  intros a H0.
+  apply (nat_le_a_and_ge_succ_a_implies_always _ 1 a).
+  {
+    intros [p0 [Hp0 _]].
+    rewrite -> Hp0 in H0.
+    destruct a as [| a'].
+    {
+      rewrite -> def_mult_clause_0 in H0.
+      discriminate.
+    }
+    {
+      simpl in H0.
+      injection H0 as H0.
+      destruct p0 as [| p0'].
+      {
+        rewrite -> add_0_r in Hp0.
+        rewrite -> add_0_r in H0.
+        rewrite <- Hp0 in H0.
+        rewrite -> mult_ident_r in H0.
+        destruct a' as [| a''].
+        {
+          rewrite -> add_0_r in H0.
+          discriminate.
+        }
+        {
+          simpl in H0; discriminate.
+        }
+      }
+      {
+        simpl in Hp0.
+        injection Hp0 as Hp0.
+        symmetry in Hp0.
+        apply zero_sum_zero_parts in Hp0 as [_ Hp0].
+        discriminate.
+      }
+    }
+  }
+  {
+    intros H1.
+    destruct H1 as [p0 [Hp0 _]].
+    rewrite -> Hp0 in H0.
+    simpl in H0.
+    injection H0 as H0.
+    rewrite <- add_swap_s in H0.
+    rewrite -> def_add_clause_1 in H0.
+    discriminate.
+  }
+Qed.
+
+Proposition reduce_p_or_p : forall (p : Prop), p \/ p -> p.
+Proof.
+  intros p H0.
+  destruct H0 as [H0l | H0r].
+  1: exact H0l. 1: exact H0r.
+Qed.
+
+(*TODO
+Proposition nat_no_square_is_double_other : forall (a b : nat),
+  ((b = 0) -> False) -> (a*a = 2 * b*b)%nat -> False.
+Proof.
+  intros a b Hnzb H1.
+  destruct (nat_ord_trichotomy_3 a b) as [Heq | [Hgt | Hlt]].
+  {
+    rewrite -> Heq in H1.
+    rewrite <- mult_assoc in H1.
+    assert (Hrw : ((b * b = 2 * (b * b)) -> (1 * (b * b) = 2 * (b * b)))%nat).
+    {
+      intros H0.
+      rewrite -> mult_ident.
+      exact H0.
+    }
+    apply Hrw in H1; clear Hrw.
+    apply mult_cancel_r in H1 as [H1l | H1r].
+    {
+      discriminate.
+    }
+    {
+      apply mult_no_zero_div in H1r.
+      apply reduce_p_or_p in H1r.
+      specialize (Hnzb H1r).
+      contradiction.
+    }
+  }
+  {
+    apply gt_as_ge_succ in Hgt.
+    destruct Hgt as [p0 [Hp0 _]].
+    rewrite -> add_swap_s in Hp0.
+    rewrite -> Hp0 in H1.
+  }
+  {
+
+  }
+
+
+  intros a b Hnzb H1.
+  destruct b as [| b'].
+  {
+    contradiction.
+  }
+  {
+    clear Hnzb.
+    destruct b' as [| b''].
+    {
+      do 2 rewrite -> mult_ident_r in H1.
+      specialize (nat_no_sqrt_2 a H1) as H2.
+      contradiction.
+    }
+    {
+
+    }
+  }
+
+  apply (nat_p_holds_le_and_gt_implies_always
+    ((b = 0 -> False) -> (a * a)%nat = (2 * b * b)%nat -> False)
+    1 b).
+  {
+    intros H0 H1 H2.
+    destruct b as [| b'].
+    {
+      contradiction.
+    }
+    {
+      destruct b' as [| b''].
+      {
+        clear H0 H1.
+        do 2 rewrite -> mult_ident_r in H2.
+        destruct a as [| a'].
+        {
+          discriminate.
+        }
+        {
+          rewrite -> def_mult_clause_1 in H2.
+          rewrite -> def_add_clause_1 in H2.
+          injection H2 as H2.
+          destruct a' as [| a''].
+          {
+            rewrite -> def_mult_clause_0 in H2.
+            rewrite -> def_add_clause_0 in H2.
+            discriminate.
+          }
+          {
+            rewrite -> def_add_clause_1 in H2.
+            injection H2 as H2.
+            apply zero_sum_zero_parts in H2 as [_ H2].
+            discriminate.
+          }
+        }
+      }
+      {
+        destruct H0 as [p0 [Hp0 _]].
+        discriminate.
+      }
+    }
+  }
+  {
+    intros H0 Hnzb H1.
+    destruct H0 as [p0 [Hp0 _]].
+    rewrite -> Hp0 in H1.
+    destruct a as [| a'].
+    {
+      simpl in H1.
+      discriminate.
+    }
+    {
+      simpl in H1.
+      injection H1 as H1.
+
+    }
+  }
+Qed.
+*)
+
+(*TODO
+Proposition nat_pos_b_no_sqrt_2 : forall (a b : nat),
+  ((b = 0) -> False) -> (a*a = 2 * b*b)%nat -> False.
+Proof.
+  intros a b Hnzb H0.
+  induction a as [| a' IHa'].
+  2:
+  {
+    destruct b as [| b'].
+    {
+      contradiction.
+    }
+    {
+      rewrite <- mult_assoc in H0.
+      rewrite -> def_mult_clause_1 in H0.
+      rewrite -> (def_mult_clause_1 b' (S b')) in H0.
+      do 2 rewrite -> def_add_clause_1 in H0.
+      rewrite -> (mult_comm 2 _) in H0.
+      rewrite -> def_mult_clause_1 in H0.
+      rewrite -> def_add_clause_1 in H0.
+      injection H0 as H0.
+
+
+      assert (Hrw : (a' + a' * S a' = a' * 1 + a' * S a')%nat).
+      {
+        rewrite -> mult_ident_r.
+        reflexivity.
+      }
+      rewrite -> Hrw in H0; clear Hrw.
+      rewrite <- (mult_dist_over_add a' 1) in H0.
+      rewrite -> def_add_clause_1 in H0.
+      rewrite -> def_add_clause_0 in H0.
+      rewrite -> mult_comm in H0.
+      rewrite -> def_mult_clause_1 in H0.
+
+      rewrite -> mult_ident in H0.
+      do 2 rewrite -> def_add_clause_1 in H0.
+      rewrite -> def_mult_clause_1 in H0.
+      rewrite -> def_add_clause_1 in H0.
+      injection H0 as H0.
+
+
+    }
+
+  }
+  {
+
+  }
+Qed.
+*)
+
+(*TODO
+Proposition q_no_sqrt_2 : forall (a : Q), 
+  ((a ** 2) ~= (NQ#2)) -> False.
+Proof.
+  intros a H0.
+  unfold q_pexp in H0.
+  rewrite -> q_mult_ident_r in H0.
+  destruct (q_trichotomy_3 a) as [Hza | [Hpa | Hna]].
+  {
+    rewrite -> Hza in H0.
+    rewrite -> q_mult_0_r in H0.
+    rewrite -> q_nq_inject in H0.
+    discriminate.
+  }
+  {
+    apply q_is_pos_as_pos_no_succ in Hpa.
+    unfold q_is_pos_no_succ in Hpa.
+    destruct Hpa as [p0 [p1 [Hnzp0 [Hnzp1 Hpa]]]].
+    rewrite -> Hpa in H0.
+    specialize ((proj1 (z_mult_preserves_ne_z_1 p1 p1)) (conj Hnzp1 Hnzp1)) as Hnzp1p1.
+    rewrite -> (q_z_mult_reduce_2 _ _ _ _ _ _ Hnzp1p1) in H0.
+    unfold q_eq in H0; simpl in H0.
+    rewrite -> z_mult_ident_r in H0.
+    rewrite -> z_mult_reduce_non_neg in H0.
+    rewrite -> z_nz_inject in H0.
+    induction p0 as [| p0' IHp0'].
+    2:
+    {
+
+    }
+    {
+
+    }
+  }
+  {
+
+  }
+Qed.
+*)
+
+(*TODO
+Proposition q_sqrt_2_approx : forall (eps : Q) (Hpeps : (q_is_pos eps)),
+  exists k : Q, (q_is_pos k) -> (((NQ#2) > (k ** 2)) /\ (((k + eps) ** 2) > (NQ#2))).
+*)
+
+Definition q_seq_inf_descent (f : nat -> Q) := forall (n : nat),
+  (f n) > (f (S n)).
+
+(*\end{Q interspersing}*)
+
 
 Close Scope Q_scope.
 (*\end{Q}*)
