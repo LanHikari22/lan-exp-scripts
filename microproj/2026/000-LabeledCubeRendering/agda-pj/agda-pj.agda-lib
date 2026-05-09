@@ -1,0 +1,15 @@
+name: agda
+include:
+  src
+  wip
+  _build
+depend:
+  standard-library-2.1
+flags:
+  --cubical
+  --no-load-primitives
+  --postfix-projections
+  --rewriting
+  --guardedness
+  --two-level
+  -W noUnsupportedIndexedMatch
