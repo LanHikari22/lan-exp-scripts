@@ -19,6 +19,10 @@
 </div>
 <br>
 
+> NOTE
+> This repository is archived. Please check out the [deltachives](https://github.com/deltachives) organization instead.
+>
+
 - [What is this?](#what-is-this)
 - [Folder Structure](#folder-structure)
   - [Scripts](#scripts)
@@ -61,4 +65,5 @@ Please feel free to contact me by opening an issue ticket or emailing lanhikarix
 # License
 
 This work is licensed under the [MIT license](https://opensource.org/licenses/mit-license.php) © 2025 Mohammed Alzakariya.
+
 
