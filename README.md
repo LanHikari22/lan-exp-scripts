@@ -20,7 +20,7 @@
 <br>
 
 > NOTE
-> This repository is archived. Please check out the [deltachives](https://github.com/deltachives) organization instead.
+> This repository is for works that don't make it to the [deltachives](https://github.com/deltachives) organization instead.
 >
 
 - [What is this?](#what-is-this)
