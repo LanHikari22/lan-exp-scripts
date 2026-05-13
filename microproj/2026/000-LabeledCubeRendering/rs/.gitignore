@@ -1,7 +1,0 @@
-target/
-
-# vim backup file stuff
-*.sw*
-
-# Database files
-*.db
